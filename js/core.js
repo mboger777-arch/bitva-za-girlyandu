@@ -111,7 +111,7 @@ function aspect(n){const i=IM[n];return okI(i)?i.naturalWidth/i.naturalHeight:1}
 // ---- кнопки: хит-зона >= 56 css px ----
 let UI=[];
 function btn(id,im,x,y,d,fn,o){o=o||{};UI.push({id,x,y,w:d,h:d,fn,dis:o.dis,always:o.always});const hov=Math.hypot(PX-x,PY-y)<d/2;const k=(hov?1.06:1)*(1+(o.pulse?Math.sin(T*5)*.05:0));
- X.save();X.translate(x,y);X.scale(k,k);if(o.dis)X.globalAlpha=.45;if(o.rot)X.rotate(o.rot);sprW(im,0,0,d);X.restore()}
+ X.save();X.translate(x,y);X.scale(k,k);if(o.dis)X.globalAlpha=.45;if(o.rot)X.rotate(o.rot);if(!o.noPlate){const r=d*.5;const g=X.createRadialGradient(0,-r*.3,r*.1,0,0,r);g.addColorStop(0,'rgba(40,80,150,.92)');g.addColorStop(1,'rgba(10,25,60,.92)');X.fillStyle=g;X.beginPath();X.arc(0,0,r,0,7);X.fill();X.lineWidth=Math.max(3,d*.05);X.strokeStyle='rgba(200,235,255,.95)';X.stroke();sprW(im,0,0,d*.68)}else sprW(im,0,0,d);X.restore()}
 // кнопка-доска с надписью
 function boardBtn(id,x,y,w,label,fn,o){o=o||{};const h=w/aspect('board');x=Math.min(x,safeR()-w/2-8);y=Math.min(y,safeB()-h/2-8);UI.push({id,x,y,w,h,fn,dis:o.dis});const hov=Math.abs(PX-x)<w/2&&Math.abs(PY-y)<h/2;const k=(hov?1.04:1)*(1+(o.pulse?Math.sin(T*4)*.03:0));
  X.save();X.translate(x,y);X.scale(k,k);sprW('board',0,0,w);X.shadowColor='transparent';X.restore();

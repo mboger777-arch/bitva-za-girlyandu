@@ -9,7 +9,7 @@ const CAM=new T3.PerspectiveCamera(50,16/9,.1,300);
 const CAMR={pos:new T3.Vector3(0,7.2,15),look:new T3.Vector3(0,1.6,-3),tp:new T3.Vector3(0,7.2,15),tl:new T3.Vector3(0,1.6,-3),k:3};
 function camTo(p,l,k){CAMR.tp.set(p[0],p[1],p[2]);CAMR.tl.set(l[0],l[1],l[2]);CAMR.k=k||3}
 function camSnap(){CAMR.pos.copy(CAMR.tp);CAMR.look.copy(CAMR.tl)}
-const CAM_GAME=[[0,7.2,15],[0,1.6,-3]];
+const CAM_GAME=[[0,6.3,12.2],[0,1.5,-3.6]];
 // --- текстуры из общего загрузчика картинок (IM), чтобы работал прогресс и ?v=
 const TX={};
 function tx3(n,o){if(TX[n])return TX[n];const im=IM[n];const t=new T3.Texture(im);t.colorSpace=T3.SRGBColorSpace;t.generateMipmaps=true;t.minFilter=T3.LinearMipmapLinearFilter;t.anisotropy=4;if(o&&o.rep){t.wrapS=t.wrapT=T3.MirroredRepeatWrapping;t.repeat.set(o.rep[0],o.rep[1])}if(o&&o.mir){t.wrapS=T3.MirroredRepeatWrapping;t.repeat.set(o.mir,1)}TX[n]=t;A3.n++;const done=()=>{t.needsUpdate=true;A3.ok++};if(okI(im))done();else im.addEventListener('load',done,{once:true});return t}
@@ -51,12 +51,13 @@ function firsUpd(){const P=FIRS.userData.P;P.forEach((p,i)=>{_v3.set(p[0],0,p[1]
 // --- освещённые низкополигональные объекты (пьедесталы, кристаллы, снежные шары, щиты)
 S3.add(new T3.HemisphereLight(0xbfd8ff,0x31407a,1.6));const DL=new T3.DirectionalLight(0xfff0d8,1.4);DL.position.set(-4,10,6);S3.add(DL);
 function inst(geo,mat,n,bloom){const m=new T3.InstancedMesh(geo,mat,n);m.count=0;m.frustumCulled=false;if(bloom)m.layers.enable(1);S3.add(m);m.L=[];return m}
-const PADS=inst(new T3.CylinderGeometry(.95,1.1,.32,10),new T3.MeshLambertMaterial({color:0x9fd2ff,emissive:0x16306a}),16);
-const XTAL=inst(new T3.OctahedronGeometry(.5,0),new T3.MeshBasicMaterial({color:0xffffff}),40,true);
+const PADS=inst(new T3.CylinderGeometry(.95,1.1,.32,10),new T3.MeshLambertMaterial({color:0x9fd2ff,emissive:0x16306a}),40);
+const XTAL=inst(new T3.OctahedronGeometry(.5,0),new T3.MeshBasicMaterial({color:0xffffff}),60,true);
 const BALLS=inst(new T3.IcosahedronGeometry(1,1),new T3.MeshLambertMaterial({color:0xf2f8ff,emissive:0x2a3f70,flatShading:true}),40);
-const SHLD=inst(new T3.CylinderGeometry(1,1,.16,6),new T3.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.85}),8,true);
+const SHLD=inst(new T3.CylinderGeometry(1,1,.16,6),new T3.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.8,depthWrite:false}),16,true);
 const SPIK=inst(new T3.ConeGeometry(.45,1.6,5),new T3.MeshLambertMaterial({color:0xbfe8ff,emissive:0x2a6ab0,flatShading:true}),60);
 [XTAL,SHLD].forEach(m=>{m.instanceColor=new T3.InstancedBufferAttribute(new Float32Array(m.instanceMatrix.count*3),3)});
+function instAdd(m,x,y,z,sx,sy,sz,q,col){if(m.count>=m.instanceMatrix.count)return;instPut(m,m.count,x,y,z,sx,sy,sz,q,col)}
 function instPut(m,i,x,y,z,sx,sy,sz,q,col){_v3.set(x,y,z);_s3.set(sx,sy,sz);_m4.compose(_v3,q||_q.identity(),_s3);m.setMatrixAt(i,_m4);if(col&&m.instanceColor)m.instanceColor.setXYZ(i,col[0],col[1],col[2]);m.count=Math.max(m.count,i+1)}
 function instReset(){[PADS,XTAL,BALLS,SHLD,SPIK].forEach(m=>m.count=0)}
 function instDone(){[PADS,XTAL,BALLS,SHLD,SPIK].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true})}
@@ -106,7 +107,7 @@ function actorsUpd(dt){for(const a of ACT){const m=a.m;m.visible=a.vis&&a.alpha>
  // моргание: подмена текстуры на кадр с закрытыми глазами
  let k=a.key;if(IM[k+'_blink']){a.blinkT-=dt;if(a.blinkT<0){a.blink=.13;a.blinkT=rnd(2.2,4.8)}if(a.blink>0){a.blink-=dt;if(okI(IM[k+'_blink']))k=k+'_blink'}}
  const t=tx3(k);if(m.material.map!==t)m.material.map=t;const im=IM[k];const ar=okI(im)?im.naturalWidth/im.naturalHeight:1;
- const br=1+Math.sin(T*2.4+a.ph)*a.breath;const sq=a.sq;const h=a.h*br*(1-sq*.18),w=a.h*ar*(1+sq*.12)/Math.sqrt(br);
+ const br=1+Math.sin(T*2.4+a.ph)*a.breath;const h=a.h*br,w=a.h*ar*br;
  m.scale.set(a.flip?-w:w,h,1);m.position.set(a.x,a.y+a.lift,a.z);m.quaternion.copy(CAM.quaternion);if(a.tilt){_zq.setFromAxisAngle(_zx,a.tilt);m.quaternion.multiply(_zq)}
  const c=m.material.color;if(a.tint)c.setRGB(a.tint[0],a.tint[1],a.tint[2]);else c.setRGB(1,1,1);if(a.flash>0){a.flash-=dt*3;const f=Math.max(0,a.flash);c.setRGB(c.r+f*2,c.g+f*2,c.b+f*2)}
  m.material.opacity=a.alpha;m.material.transparent=true;
@@ -125,7 +126,7 @@ const BL={};
  BL.blur=new T3.ShaderMaterial({uniforms:{tex:{value:null},dir:{value:new T3.Vector2()}},vertexShader:vs,depthTest:false,depthWrite:false,
   fragmentShader:'uniform sampler2D tex;uniform vec2 dir;varying vec2 vU;void main(){vec3 c=texture2D(tex,vU).rgb*.227;c+=texture2D(tex,vU+dir*1.385).rgb*.316;c+=texture2D(tex,vU-dir*1.385).rgb*.316;c+=texture2D(tex,vU+dir*3.231).rgb*.07;c+=texture2D(tex,vU-dir*3.231).rgb*.07;gl_FragColor=vec4(c,1.);}'});
  BL.comp=new T3.ShaderMaterial({uniforms:{tex:{value:null},raw:{value:null},k:{value:1.3},slow:{value:0},frost:{value:0},flash:{value:0},bl:{value:1}},vertexShader:vs,transparent:true,depthTest:false,depthWrite:false,blending:T3.CustomBlending,blendSrc:T3.OneFactor,blendDst:T3.OneFactor,
-  fragmentShader:'uniform sampler2D tex,raw;uniform float k,slow,frost,flash,bl;varying vec2 vU;void main(){vec3 c=(texture2D(tex,vU).rgb*k+texture2D(raw,vU).rgb*.5)*bl;vec2 d=vU-.5;float v=dot(d,d);c+=vec3(.25,.55,1.)*smoothstep(.12,.32,v)*(slow*.5+frost*.8);c+=vec3(1.,.95,.8)*flash;gl_FragColor=vec4(c,1.);}'});
+  fragmentShader:'uniform sampler2D tex,raw;uniform float k,slow,frost,flash,bl;varying vec2 vU;void main(){vec3 c=((1.-exp(-texture2D(tex,vU).rgb*1.2))*k+(1.-exp(-texture2D(raw,vU).rgb))*.35)*bl;vec2 d=vU-.5;float v=dot(d,d);c+=vec3(.25,.55,1.)*smoothstep(.12,.32,v)*(slow*.5+frost*.8);c+=vec3(1.,.95,.8)*flash;gl_FragColor=vec4(c,1.);}'});
  BL.dark=new T3.ShaderMaterial({uniforms:{a:{value:0}},vertexShader:vs,transparent:true,depthTest:false,depthWrite:false,fragmentShader:'uniform float a;varying vec2 vU;void main(){vec2 d=vU-.5;gl_FragColor=vec4(0.02,.04,.12,a*smoothstep(.05,.45,dot(d,d)));}'});
  BL.q=new T3.Mesh(new T3.PlaneGeometry(2,2));BL.qs=new T3.Scene();BL.qs.add(BL.q);BL.oc=new T3.OrthographicCamera(-1,1,1,-1,0,1)})();
 // чёрный материал-заглушка для не-светящихся объектов при рендере слоя bloom: глушим через layers + маску глубины
@@ -150,7 +151,7 @@ function treeGlow(){const a=TREE3.a;if(!a||!a.vis)return;const im=IM.tree;const 
  if(TREE3.flick>0)TREE3.flick-=DT;if(TREE3.lit>=1){const s=.8+.2*Math.sin(T*4);glow(a.x,a.y+a.h*.99,a.z+.2,[1*s,.95*s,.6*s],3.2)}
  if(TREE3.lit>0)lightPool(a.x,a.z+1,4+TREE3.lit*3,[.35*TREE3.lit,.28*TREE3.lit,.12*TREE3.lit],.8)}
 let L3UPD=null;// хук сцены: вызывается перед рендером для заполнения батчей
-function frame3D(){if(!A3.ready&&A3.n&&A3.ok>=A3.n)A3.ready=true;resize3();const dt=DT;
+function frame3D(){if(!A3.ready&&A3.n&&A3.ok>=A3.n)A3.ready=true;const gs=R3.domElement.style;['left','top','width','height'].forEach(k=>{if(gs[k]!==C.style[k])gs[k]=C.style[k]});const vv=A3.off?'hidden':'visible';if(gs.visibility!==vv)gs.visibility=vv;if(A3.off)return;resize3();const dt=DT;
  // слоу-мо
  if(A3.slowT>0){A3.slowT-=dt;A3.TS=lerp(A3.TS,.22,.3)}else A3.TS=lerp(A3.TS,1,.08);
  // камера: плавное следование + встряска + «толчок»
@@ -166,7 +167,7 @@ function frame3D(){if(!A3.ready&&A3.n&&A3.ok>=A3.n)A3.ready=true;resize3();const
  if(A3.bloom){// проход bloom: только слой 1, тёмные силуэты остальных — через предварительную глубину сцены
   const bg=S3.background,fog=S3.fog;S3.background=null;S3.fog=null;R3.setRenderTarget(BL.a);R3.setClearColor(0x000000,1);R3.clear();
   S3.overrideMaterial=OCCL;CAM.layers.set(0);const hid=[GLOW,BEAM,DLT,SNOW,AUR,XTAL,SHLD,PAN,MOON,FIRS,GROUND3];hid.forEach(o=>o.visible=false);ACT.forEach(a=>a.m.visible=false);R3.render(S3,CAM);// глубина героев не нужна — только земля/низкополи как маска
-  S3.overrideMaterial=null;hid.forEach(o=>o.visible=true);AUR.visible=A3.aur>.01;actorsVisFix();CAM.layers.set(1);R3.render(S3,CAM);CAM.layers.set(0);S3.background=bg;S3.fog=fog;
+  S3.overrideMaterial=null;hid.forEach(o=>o.visible=true);AUR.visible=A3.aur>.01;actorsVisFix();const gp=GLOW.material.uniforms.ps,ps0=gp.value;gp.value=ps0*BL.a.height/(RH*QDPR);CAM.layers.set(1);R3.render(S3,CAM);gp.value=ps0;CAM.layers.set(0);S3.background=bg;S3.fog=fog;
   const ts=BL.blur.uniforms;ts.tex.value=BL.a.texture;ts.dir.value.set(1/BL.a.width,0);quad(BL.blur,BL.b);ts.tex.value=BL.b.texture;ts.dir.value.set(0,1/BL.a.height);quad(BL.blur,BL.c);ts.tex.value=BL.c.texture;ts.dir.value.set(2/BL.a.width,0);quad(BL.blur,BL.b);ts.tex.value=BL.b.texture;ts.dir.value.set(0,2/BL.a.height);quad(BL.blur,BL.c);
   const cu=BL.comp.uniforms;cu.tex.value=BL.c.texture;cu.raw.value=BL.a.texture;cu.bl.value=1}
  const cu=BL.comp.uniforms;cu.slow.value=clamp((1-A3.TS)*1.3,0,1);cu.frost.value=Math.min(1,A3.frost);cu.flash.value=A3.flash;
