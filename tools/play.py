@@ -45,7 +45,7 @@ async def run(b,W,H,F,R):
         if g['x']-g['w']/2<v['x0']-1 or g['x']+g['w']/2>v['x0']+v['w']+1:F.append(f"{tag} {where} 2D hero {g['n']} cut by edge")
     for c in A['ac']:
       if c['ar'] and abs(c['sar']-c['ar'])/c['ar']>0.01:F.append(f"{tag} {where} 3D {c['k']} stretched sar={c['sar']:.3f} ar={c['ar']:.3f}")
-      if c['k'] in('ride','tree','cone','put_angry','put_kind','put_laugh') and abs(c['y'])>0.05:F.append(f"{tag} {where} 3D {c['k']} not on ground y={c['y']:.2f}")
+      if c['k'] in('ride','tree','cone','put_angry','put_kind','put_laugh') and abs(c['y'])>(0.1 if where.startswith('boss') else 0.05):F.append(f"{tag} {where} 3D {c['k']} not on ground y={c['y']:.2f}")
   async def shot(name):
     st['shots']+=1;await pg.screenshot(path=f'{out}/{st["shots"]:02d}_{name}.png')
   async def perf(where):

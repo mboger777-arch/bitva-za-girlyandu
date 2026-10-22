@@ -49,8 +49,8 @@ const L2Q=[[3,4,5,6],[2,4,6,8],[1,3,5,7],[10,11,12,13],[6,8,10,12],[11,13,15,17]
 lvlScene(2,{steps:6,win:'b_win',
  setup(){LV.f=[];GM.extra=l2Upd},
  async run(){await say('b_in');
-  for(let s=0;s<6;s++){const Q=L2Q[s];LV.f.forEach(d=>actorKill(d.a));LV.f=Q.map((v,i)=>({v,i,x:(i-1.5)*3.1,z:-5.6,y:2.6,a:actor('drone',2.1,{x:(i-1.5)*3.1,z:-17,y:5,breath:.01}),show:i<3,dead:0,t0:T+i*.12}));LV.shield=1;
-   wave(['bot'],1);await wait(1400);while(T-LV.f[3].t0<1.35)await new Promise(r=>setTimeout(r,50));GOAL=GOALS[2];await say('b_q'+(s+1));
+  for(let s=0;s<6;s++){const Q=L2Q[s];LV.f.forEach(d=>actorKill(d.a));LV.f=Q.map((v,i)=>({v,i,x:(i-1.5)*3.7,z:-4.6,y:2.4,a:actor('drone',2.9,{x:(i-1.5)*3.7,z:-17,y:5,breath:.01}),show:i<3,dead:0,t0:T+i*.12}));LV.shield=1;
+   wave(['bot'],1);await wait(1400);while(LV.f&&LV.f[3]&&T-LV.f[3].t0<1.35)await new Promise(r=>setTimeout(r,50));GOAL=GOALS[2];await say('b_q'+(s+1));
    const d=Q[3]-Q[2];const opts=numOpts(Q[3],d).map(v=>({v}));
    await ask({opts,ans:opts.findIndex(o=>o.v===Q[3]),target:()=>{const f=LV.f[3];return[f.x,f.y+.8,f.z]},hint:'b_hint'});
    LV.f[3].show=1;LV.shield=0;GOAL='';stepDone();SFX3.thunder();
@@ -58,8 +58,8 @@ lvlScene(2,{steps:6,win:'b_win',
    const b=GM.bur;let prev=[b.x,2.3,b.z];for(let i=0;i<4;i++){const f=LV.f[i];const cur=[f.x,f.y+.8,f.z];const pv=prev;setTimeout(()=>{GM.sky.push({a:pv,b:cur,life:.5,c:[.6,.85,1],w:.4,zig:.45,seed:i*5});f.dead=1;f.a.flash=2;SFX3.boom();cshake(.6);for(let k=0;k<26;k++)GM.fx.push({x:f.x,y:f.y+.8,z:f.z,vx:rnd(-5,5),vy:rnd(-1,6),vz:rnd(-3,3),g:8,life:.8,ml:.8,c:[CL.cy,CL.wht,CL.gold][k%3],s:.5})},150+i*170);prev=cur}
    await say('b_ok'+(s+1));wave(['bot','bot','drone'].slice(0,2+(s%2)),1);await waveDone(1.5)}},
  draw(){if(!LV.f)return;LV.f.forEach(f=>{if(f.dead)return;const p=[f.x,f.y-.25,f.z];if(f.show)numTag(p[0],p[1],p[2],f.v,{u:.95,min:54});else if(GM.q)qTag(p[0],p[1]+.6,p[2],{u:1.1,min:60})})}});
-function l2Upd(dt){if(!LV.f)return;LV.f.forEach((f,i)=>{const a=f.a;if(f.dead){a.alpha=Math.max(0,a.alpha-dt*4);a.y-=dt*4;return}const k=ease(clamp((T-f.t0)/1.3,0,1));a.x=f.x;a.z=lerp(-17,f.z,k);a.y=lerp(5,f.y,k)+Math.sin(T*2.5+i)*.15;f.y=2.6;
-  glow(a.x,a.y+.8,a.z+.1,CL.cy,1.1);if(LV.shield&&k>.9){ring(a.x,a.z,1.3,mul(CL.cy,.4),1,T*2);if(i<3){const g=LV.f[i+1].a;GM.sky.push({a:[a.x,a.y+.8,a.z],b:[g.x,g.y+.8,g.z],life:.03,c:[.25,.55,1],w:.18,zig:.12,seed:i})}}})}
+function l2Upd(dt){if(!LV.f)return;LV.f.forEach((f,i)=>{const a=f.a;if(f.dead){a.alpha=Math.max(0,a.alpha-dt*4);a.y-=dt*4;return}const k=ease(clamp((T-f.t0)/1.3,0,1));a.x=f.x;a.z=lerp(-17,f.z,k);a.y=lerp(5,f.y,k)+Math.sin(T*2.5+i)*.15;f.y=2.4;
+  glow(a.x,a.y+1.45,a.z+.1,CL.cy,1.3);if(LV.shield&&k>.9){ring(a.x,a.z,1.3,mul(CL.cy,.4),1,T*2);if(i<3){const g=LV.f[i+1].a;GM.sky.push({a:[a.x,a.y+1.45,a.z],b:[g.x,g.y+1.45,g.z],life:.03,c:[.25,.55,1],w:.18,zig:.12,seed:i})}}})}
 // ===== Уровень 3: колонна роботов (самозванец и пропуск) =====
 const L3Q=[{k:'imp',v:[2,4,6,7,10],a:3,fix:8},{k:'gap',v:[5,10,null,20,25],a:2,ans:15},{k:'imp',v:[10,20,30,35,50],a:3,fix:40},{k:'gap',v:[2,4,6,null,10],a:3,ans:8},{k:'imp',v:[1,2,3,4,6],a:4,fix:5},{k:'gap',v:[10,20,null,40,50],a:2,ans:30}];
 lvlScene(3,{steps:6,win:'c_win',
