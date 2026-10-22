@@ -49,8 +49,8 @@ const L2Q=[[3,4,5,6],[2,4,6,8],[1,3,5,7],[10,11,12,13],[6,8,10,12],[11,13,15,17]
 lvlScene(2,{steps:6,win:'b_win',
  setup(){LV.f=[];GM.extra=l2Upd},
  async run(){await say('b_in');
-  for(let s=0;s<6;s++){const Q=L2Q[s];LV.f.forEach(d=>actorKill(d.a));LV.f=Q.map((v,i)=>({v,i,x:(i-1.5)*3.1,z:-5.6,y:2.6,a:actor('drone',1.6,{x:(i-1.5)*3.1,z:-17,y:5,breath:.01}),show:i<3,dead:0,t0:T+i*.12}));LV.shield=1;
-   wave(['bot'],1);await wait(1400);GOAL=GOALS[2];await say('b_q'+(s+1));
+  for(let s=0;s<6;s++){const Q=L2Q[s];LV.f.forEach(d=>actorKill(d.a));LV.f=Q.map((v,i)=>({v,i,x:(i-1.5)*3.1,z:-5.6,y:2.6,a:actor('drone',2.1,{x:(i-1.5)*3.1,z:-17,y:5,breath:.01}),show:i<3,dead:0,t0:T+i*.12}));LV.shield=1;
+   wave(['bot'],1);await wait(1400);while(T-LV.f[3].t0<1.35)await new Promise(r=>setTimeout(r,50));GOAL=GOALS[2];await say('b_q'+(s+1));
    const d=Q[3]-Q[2];const opts=numOpts(Q[3],d).map(v=>({v}));
    await ask({opts,ans:opts.findIndex(o=>o.v===Q[3]),target:()=>{const f=LV.f[3];return[f.x,f.y+.8,f.z]},hint:'b_hint'});
    LV.f[3].show=1;LV.shield=0;GOAL='';stepDone();SFX3.thunder();
@@ -76,7 +76,7 @@ lvlScene(3,{steps:6,win:'c_win',
    // колонна по правилу — цепной разлом
    for(const c of LV.c){setTimeout(()=>{if(!c.a)return;boom3(c.a.x,1.2,c.a.z);SFX3.chime(c.i+2);actorKill(c.a);c.a=null},c.i*200)}
    await say('c_ok'+(s+1));wave(['thief','bot','thief'].slice(0,2+(s%2)),1.1);await waveDone(1.5)}},
- draw(){if(!LV.c)return;LV.c.forEach(c=>{if(c.a){const k=clamp((T-c.t0)/1.2,0,1);if(k>.9)numTag(c.a.x,c.a.y+3.05+c.a.lift,c.a.z+.1,c.v,{u:.85,min:50,wob:c.wob&&T-c.wob<.6?1:0,bg:c.fixed?'rgba(20,90,50,.85)':null})}else if(c.v==null&&GM.q)qTag(c.x,1.2,c.z,{u:1.1,min:60})})}});
+ draw(){if(!LV.c)return;LV.c.forEach(c=>{if(c.a){const k=clamp((T-c.t0)/1.2,0,1);if(k>.9&&c.a.y<.3&&Math.abs(c.a.x)<10)numTag(c.a.x,c.a.y+3.05+c.a.lift,c.a.z+.1,c.v,{u:.85,min:50,wob:c.wob&&T-c.wob<.6?1:0,bg:c.fixed?'rgba(20,90,50,.85)':null})}else if(c.v==null&&GM.q)qTag(c.x,1.2,c.z,{u:1.1,min:60})})}});
 function boom3(x,y,z){SFX3.boom();cshake(.5);for(let k=0;k<24;k++)GM.fx.push({x,y,z,vx:rnd(-5,5),vy:rnd(0,6),vz:rnd(-3,3),g:9,life:.7,ml:.7,c:[CL.cy,CL.wht,CL.gold][k%3],s:.5});GM.fx.push({ring:1,x,z,life:.5,ml:.5,r:2.5,c:CL.ice})}
 function l3Upd(dt){if(!LV.c)return;LV.c.forEach(c=>{if(!c.a){if(c.v==null)ring(c.x,c.z,1,mul(CL.gold,.5+.4*Math.sin(T*6)),1,T);return}const a=c.a;const k=ease(clamp((T-c.t0)/1.2,0,1));
   if(c.drop){a.y=Math.max(0,a.y-dt*14);if(a.y===0){c.drop=0;SFX.thump();cshake(.3)}}else{a.x=lerp(-20,c.x,k);a.lift=Math.abs(Math.sin(T*6+c.i))*.12}a.z=c.z;a.flip=false;
@@ -124,7 +124,7 @@ lvlScene(5,{steps:6,win:'e_win',cam:[[0,11.5,9.6],[0,0,-3.6]],world:{tx:-9.6,tz:
   wave(['bot','thief'],1.5);GOAL='Строка 2, столбец 3: какое число?';await say('e_cell');
   const cells=[];for(let r=0;r<3;r++)for(let c=0;c<4;c++)cells.push({id:r*4+c,box:()=>cellBox(r,c),c3:()=>[TX5[c],.6,TZ5[r]]});
   await ask({pick:cells,ans:6,target:()=>[TX5[2],.6,TZ5[1]],hint:'e_hint'});LV.cellFl=[1,2,T];GOAL='';stepDone();rowFire(1);rowFire(0);await say('e_ok6');await waveDone(.5)},
- draw(){for(let c=0;c<4;c++)numTag(TX5[c],.2,TZ5[0]-2.5,c+1,{u:.7,min:44,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'colh'});
+ draw(){for(let c=0;c<4;c++)numTag(TX5[c],.2,TZ5[0]-2.9,c+1,{u:.7,min:44,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'colh'});
   for(let r=0;r<3;r++){numTag(TX5[0]-2.6,.2,TZ5[r],r+1,{u:.7,min:44,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'rowh'});
    for(let c=0;c<4;c++){if(LV.hid[r+','+c]){if(LV.cur&&LV.cur[0]===r&&LV.cur[1]===c&&GM.q)qTag(TX5[c],.9,TZ5[r],{u:1,min:56});continue}
     const fl=LV.cellFl&&LV.cellFl[0]===r&&LV.cellFl[1]===c&&T-LV.cellFl[2]<1.2;numTag(TX5[c],.65,TZ5[r],TBL[r][c],{u:.82,min:48,bg:fl?'rgba(30,120,60,.9)':LV.rows[r]?'rgba(20,70,110,.85)':null})}}}});

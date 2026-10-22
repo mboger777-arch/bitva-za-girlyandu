@@ -130,10 +130,21 @@ async def run(b,W,H,F,R):
   if await tapbtn('bonus',5):
     await pg.wait_for_function('G.scene==="bonus"',timeout=8000);await pg.wait_for_timeout(1500);await perf('bonus')
     nq=await play('bonus','false',1);await shot('bonus');R.append(f'{tag} bonus: {nq} q')
+  # северное сияние: 3 верных ответа подряд с первого раза
+  await pg.evaluate('G.go("l1")');t0=time.time();ok=0
+  while ok<3 and time.time()-t0<90:
+    q=await pg.evaluate('G.q()');gm=await pg.evaluate('G.gm()')
+    if q and not gm['fly'] and q['tries']==0:
+      p=await pg.evaluate(f'G.trayPg({q["ans"]})');await pg.touchscreen.tap(p['x'],p['y']);ok+=1;await pg.wait_for_timeout(600)
+    else:
+      if gm['en']>0:await pg.evaluate('G.killAll()')
+      await pg.wait_for_timeout(150)
+  await pg.wait_for_timeout(1500);await shot('aurora')
+  if not await pg.evaluate('!!G.S().sec.aur'):F.append(f'{tag} aurora super-volley not triggered')
   sec=await pg.evaluate('G.S().sec');R.append(f'{tag} secrets {sec}')
   # портрет: подсказка поворота
-  await pg.set_viewport_size({'width':H,'height':W});await pg.wait_for_timeout(700);await pg.screenshot(path=f'{out}/99_portrait.png')
-  rot=await pg.evaluate('typeof rotOn!=="undefined"?rotOn():(G.rot?G.rot():null)');R.append(f'{tag} portrait rot={rot}')
+  c2=await b.new_context(viewport={'width':H,'height':W},has_touch=True,is_mobile=True,device_scale_factor=2);p2=await c2.new_page()
+  await p2.goto(URL);await p2.wait_for_timeout(4000);await p2.screenshot(path=f'{out}/99_portrait.png');await c2.close()
   if errs:F.append(f'{tag} errors {errs[:5]}')
   R.append(f'{tag} audits={st["aud"]} mistakes={await pg.evaluate("G.mist()")}')
   await ctx.close()

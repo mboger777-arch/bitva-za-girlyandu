@@ -1,6 +1,6 @@
 'use strict';
 // ===== Заставка, вступление, карта, медаль, бонус «Снежная битва» =====
-function orbit(r,h,sp,cx,cz,ly){GM.extra=dt=>{const a=T*sp;CAMR.tp.set(cx+Math.sin(a)*r,h,cz+Math.cos(a)*r);CAMR.tl.set(cx,ly,cz)}}
+function orbit(r,h,sp,cx,cz,ly){GM.extra=dt=>{const a=Math.sin(T*sp)*.32;CAMR.tp.set(cx+Math.sin(a)*r,h,cz+Math.cos(a)*r);CAMR.tl.set(cx,ly,cz)}}
 SC.title={noHome:1,
  enter(){world({lit:1,bur:false});TREE3.lit=1;GM.bur=null;cast=[hero('kira',LEFT(150),{h:400}),hero('shustrik',RIGHT(130),{base:'cheer',h:250})];
   orbit(13,5.2,.12,0,-9,4.2);CAMR.k=1.2;camSnap();musMenu()},
@@ -52,7 +52,7 @@ SC.medal={
 SC.bonus={
  enter(){GM.lvl=0;GM.steps=0;LV={f:[],sc:0,best:SV.sec.best||0};world({lit:1});TREE3.lit=1;cast=[hero('shustrik',LEFT(105),{base:'orb',h:215})];musStart('game',150,1);GM.extra=l2Upd;GM.score=0;
   run(async()=>{await say('x_in');let r=0;for(;;){r++;wave(Array.from({length:3+Math.min(6,r)},(_,i)=>['bot','drone','thief'][i%3]),Math.max(.45,1.1-r*.06));await wait(G.fast?200:14000);
-   const a=Math.floor(rnd(1,8)),d=[1,2,5,10][Math.floor(rnd(0,4))];const Q=[a,a+d,a+2*d,a+3*d];LV.f.forEach(f=>actorKill(f.a));LV.f=Q.map((v,i)=>({v,i,x:(i-1.5)*3.1,z:-5.6,y:2.6,a:actor('drone',1.6,{x:(i-1.5)*3.1,z:-17,y:5}),show:i<3,dead:0,t0:T+i*.12}));LV.shield=1;
+   const a=Math.floor(rnd(1,8)),d=[1,2,5,10][Math.floor(rnd(0,4))];const Q=[a,a+d,a+2*d,a+3*d];LV.f.forEach(f=>actorKill(f.a));LV.f=Q.map((v,i)=>({v,i,x:(i-1.5)*3.1,z:-5.6,y:2.6,a:actor('drone',2.1,{x:(i-1.5)*3.1,z:-17,y:5}),show:i<3,dead:0,t0:T+i*.12}));LV.shield=1;while(T-LV.f[3].t0<1.35)await new Promise(r=>setTimeout(r,50));
    await say('x_q');const opts=numOpts(Q[3],d).map(v=>({v}));await ask({opts,ans:opts.findIndex(o=>o.v===Q[3]),target:()=>{const f=LV.f[3];return[f.x,f.y+.8,f.z]}});LV.f[3].show=1;LV.shield=0;GM.score+=50;
    const b=GM.bur;let prev=[b.x,2.3,b.z];LV.f.forEach((f,i)=>{const cur=[f.x,f.y+.8,f.z],pv=prev;setTimeout(()=>{GM.sky.push({a:pv,b:cur,life:.5,c:[.6,.85,1],w:.4,zig:.45,seed:i});f.dead=1;boom3(cur[0],cur[1],cur[2])},150+i*170);prev=cur});killAll();
    if(GM.score>=500&&!LV.endSaid){LV.endSaid=1;say('x_end').catch(()=>{})}}})},
