@@ -1,0 +1,182 @@
+{
+ "kira_cheer": {
+  "w": 553,
+  "h": 832,
+  "edge": false
+ },
+ "kira_think": {
+  "w": 336,
+  "h": 831,
+  "edge": false
+ },
+ "kira_point": {
+  "w": 407,
+  "h": 832,
+  "edge": false
+ },
+ "put_angry": {
+  "w": 596,
+  "h": 823,
+  "edge": false
+ },
+ "put_laugh": {
+  "w": 524,
+  "h": 824,
+  "edge": false
+ },
+ "put_kind": {
+  "w": 585,
+  "h": 824,
+  "edge": false
+ },
+ "ride": {
+  "w": 613,
+  "h": 875,
+  "edge": false
+ },
+ "ride_run": {
+  "w": 722,
+  "h": 866,
+  "edge": false
+ },
+ "bot": {
+  "w": 636,
+  "h": 811,
+  "edge": false
+ },
+ "drone": {
+  "w": 819,
+  "h": 803,
+  "edge": false
+ },
+ "thief": {
+  "w": 535,
+  "h": 864,
+  "edge": false
+ },
+ "tree": {
+  "w": 544,
+  "h": 900,
+  "edge": false
+ },
+ "ball_r": {
+  "w": 537,
+  "h": 700,
+  "edge": false
+ },
+ "ball_g": {
+  "w": 533,
+  "h": 700,
+  "edge": false
+ },
+ "ball_b": {
+  "w": 532,
+  "h": 700,
+  "edge": false
+ },
+ "star": {
+  "w": 693,
+  "h": 680,
+  "edge": false
+ },
+ "bell": {
+  "w": 572,
+  "h": 676,
+  "edge": false
+ },
+ "cone": {
+  "w": 547,
+  "h": 700,
+  "edge": false
+ },
+ "medal": {
+  "w": 447,
+  "h": 700,
+  "edge": false
+ },
+ "snowball": {
+  "w": 665,
+  "h": 676,
+  "edge": false
+ },
+ "core": {
+  "w": 662,
+  "h": 672,
+  "edge": false
+ },
+ "fir": {
+  "w": 528,
+  "h": 700,
+  "edge": false
+ },
+ "board": {
+  "w": 786,
+  "h": 480,
+  "edge": false
+ },
+ "plank": {
+  "w": 837,
+  "h": 159,
+  "edge": false
+ },
+ "bubble": {
+  "w": 735,
+  "h": 600,
+  "edge": false
+ },
+ "b_ok": {
+  "w": 344,
+  "h": 284,
+  "edge": false
+ },
+ "b_undo": {
+  "w": 339,
+  "h": 296,
+  "edge": false
+ },
+ "b_home": {
+  "w": 369,
+  "h": 343,
+  "edge": false
+ },
+ "b_sound": {
+  "w": 350,
+  "h": 303,
+  "edge": false
+ },
+ "b_next": {
+  "w": 342,
+  "h": 265,
+  "edge": false
+ },
+ "b_snow": {
+  "w": 611,
+  "h": 620,
+  "edge": false
+ },
+ "kira": {
+  "w": 365,
+  "h": 833,
+  "edge": false
+ },
+ "putanik": {
+  "w": 623,
+  "h": 842,
+  "edge": false
+ },
+ "shu_cheer": {
+  "w": 659,
+  "h": 841,
+  "edge": false
+ },
+ "shu_think": {
+  "w": 611,
+  "h": 845,
+  "edge": false
+ },
+ "shu_orb": {
+  "w": 645,
+  "h": 840,
+  "edge": false
+ }
+}
