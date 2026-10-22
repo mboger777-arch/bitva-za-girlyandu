@@ -29,7 +29,7 @@ const GROUND3=(()=>{const g=new T3.PlaneGeometry(120,90,30,24);g.rotateX(-Math.P
  g.setAttribute('color',new T3.BufferAttribute(col,3));const m=new T3.Mesh(g,new T3.MeshBasicMaterial({map:tx3('tex_snow',{rep:[14,10]}),vertexColors:true}));m.position.z=-8;S3.add(m);return m})();
 // --- задник: панорама леса (зеркальный повтор по ширине), без тумана
 const PAN=(()=>{const h=34,w=h*16/9*3;const m=new T3.Mesh(new T3.PlaneGeometry(w,h),new T3.MeshBasicMaterial({map:tx3('bg_pan',{mir:3}),fog:false,depthWrite:false}));m.position.set(0,h/2-3.2,-44);m.renderOrder=-10;S3.add(m);return m})();
-const MOON=(()=>{const m=new T3.Mesh(new T3.PlaneGeometry(1,1),new T3.MeshBasicMaterial({map:tx3('moon'),transparent:true,fog:false,depthWrite:false}));m.position.set(-17,15.5,-42);m.scale.set(5,5,1);m.renderOrder=-9;S3.add(m);return m})();
+const MOON=(()=>{const m=new T3.Mesh(new T3.PlaneGeometry(1,1),new T3.MeshBasicMaterial({map:tx3('moon'),transparent:true,fog:false,depthWrite:false}));m.position.set(-17,11.6,-42);m.scale.set(5,5,1);m.renderOrder=-9;S3.add(m);return m})();
 // --- северное сияние (шейдер, аддитивно, в слое bloom)
 const AUR=(()=>{const mat=new T3.ShaderMaterial({transparent:true,depthWrite:false,blending:T3.AdditiveBlending,fog:false,uniforms:{t:{value:0},a:{value:0}},
  vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',

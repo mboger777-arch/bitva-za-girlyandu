@@ -6,7 +6,7 @@ const GOALS={1:'Какой огонёк следующий?',2:'Какое чи�
 function lvlScene(n,o){SC['l'+n]={
  enter(){GM.lvl=n;GM.stepN=0;GM.steps=o.steps;GM.kills=0;LV={n};world(o.world||{});GM.gt=0;
   cast=[hero('shustrik',LEFT(105),{base:'orb',h:215})];o.setup&&o.setup();musStart('game',o.bpm||132,1);
-  CAMR.pos.set(0,15,24);CAMR.look.set(0,3,-8);camTo(CAM_GAME[0],CAM_GAME[1],1.4);
+  CAMR.pos.set(0,15,24);CAMR.look.set(0,3,-8);camTo((o.cam||CAM_GAME)[0],(o.cam||CAM_GAME)[1],1.4);
   run(async()=>{await wait(600);await o.run();await lvlWin(n,o.win)})},
  draw(){if(o.draw)o.draw();if(LV.done)winDraw();drawCast();trayDraw();flyDraw();garlandHUD()},
  ui(){if(LV.done)boardBtn('next',RIGHT(150),safeB()-70,280,'Дальше',()=>go(n<5?'map':'map'),{pulse:1})},
@@ -65,18 +65,18 @@ const L3Q=[{k:'imp',v:[2,4,6,7,10],a:3,fix:8},{k:'gap',v:[5,10,null,20,25],a:2,a
 lvlScene(3,{steps:6,win:'c_win',
  setup(){LV.c=[];GM.extra=l3Upd},
  async run(){await say('c_in');
-  for(let s=0;s<6;s++){const Q=L3Q[s];LV.c.forEach(c=>c.a&&actorKill(c.a));LV.c=Q.v.map((v,i)=>({v,i,x:(i-2)*2.9,z:-3.9,a:v==null?null:actor('bot',2.1,{x:-20,z:-3.9,breath:.012}),t0:T+i*.15,wob:0}));
-   wave(['thief'],1);await wait(1600);GOAL=Q.k==='imp'?'Нажми на робота-самозванца!':'Какое число пропало?';
+  for(let s=0;s<6;s++){const Q=L3Q[s];LV.c.forEach(c=>c.a&&actorKill(c.a));LV.c=Q.v.map((v,i)=>({v,i,x:(i-2)*2.9,z:-3.9,a:v==null?null:actor('bot',2.6,{x:-20,z:-3.9,breath:.012}),t0:T+i*.15,wob:0}));
+   wave(['thief'],1);await wait(1600);while(T-LV.c[LV.c.length-1].t0<1.3)await new Promise(r=>setTimeout(r,50));GOAL=Q.k==='imp'?'Нажми на робота-самозванца!':'Какое число пропало?';
    await say(Q.k==='imp'?'c_imp':'c_gap');
-   if(Q.k==='imp'){await ask({pick:LV.c.map(c=>({id:c.i,box:()=>{const a=c.a,f=projA(a,0),t=projA(a,1.05);const w=(f.y-t.y)*.55;return[f.x-w/2,t.y,f.x+w/2,f.y]},c3:()=>[c.a.x,1.2,c.a.z],get wob(){return 0},set wob(v){c.wob=v}})),ans:Q.a,target:()=>[0,1,-4],hint:'c_hint'});
-    const c=LV.c[Q.a];const b=GM.bur;GM.sky.push({a:[b.x,2.3,b.z],b:[c.a.x,1.2,c.a.z],life:.4,c:CL.cy,w:.45,zig:0});SFX3.laser();boom3(c.a.x,1.2,c.a.z);actorKill(c.a);c.a=actor('bot',2.1,{x:c.x,z:c.z,y:7,breath:.012});c.drop=1;c.v=Q.fix;c.fixed=1}
+   if(Q.k==='imp'){await ask({pick:LV.c.map(c=>({id:c.i,box:()=>{const a=c.a,f=projA(a,0),t=projA(a,1.3);const w=(f.y-t.y)*.62;return[f.x-w/2,t.y,f.x+w/2,f.y]},c3:()=>[c.a.x,1.2,c.a.z],get wob(){return 0},set wob(v){c.wob=v}})),ans:Q.a,target:()=>[0,1,-4],hint:'c_hint'});
+    const c=LV.c[Q.a];const b=GM.bur;GM.sky.push({a:[b.x,2.3,b.z],b:[c.a.x,1.2,c.a.z],life:.4,c:CL.cy,w:.45,zig:0});SFX3.laser();boom3(c.a.x,1.2,c.a.z);actorKill(c.a);c.a=actor('bot',2.6,{x:c.x,z:c.z,y:7,breath:.012});c.drop=1;c.v=Q.fix;c.fixed=1}
    else{const opts=numOpts(Q.ans,Q.v[1]-Q.v[0]).map(v=>({v}));await ask({opts,ans:opts.findIndex(o=>o.v===Q.ans),target:()=>[LV.c[Q.a].x,1.2,LV.c[Q.a].z],hint:'c_hint'});
-    const c=LV.c[Q.a];c.v=Q.ans;c.a=actor('bot',2.1,{x:c.x,z:c.z,breath:.012});c.a.flash=2;c.holo=T;c.fixed=1}
+    const c=LV.c[Q.a];c.v=Q.ans;c.a=actor('bot',2.6,{x:c.x,z:c.z,breath:.012});c.a.flash=2;c.holo=T;c.fixed=1}
    GOAL='';stepDone();await wait(500);
    // колонна по правилу — цепной разлом
    for(const c of LV.c){setTimeout(()=>{if(!c.a)return;boom3(c.a.x,1.2,c.a.z);SFX3.chime(c.i+2);actorKill(c.a);c.a=null},c.i*200)}
    await say('c_ok'+(s+1));wave(['thief','bot','thief'].slice(0,2+(s%2)),1.1);await waveDone(1.5)}},
- draw(){if(!LV.c)return;LV.c.forEach(c=>{if(c.a){const k=clamp((T-c.t0)/1.2,0,1);if(k>.9)numTag(c.a.x,c.a.y+1.05+c.a.lift,c.a.z+.1,c.v,{u:.9,min:52,wob:c.wob&&T-c.wob<.6?1:0,bg:c.fixed?'rgba(20,90,50,.85)':null})}else if(c.v==null&&GM.q)qTag(c.x,1.2,c.z,{u:1.1,min:60})})}});
+ draw(){if(!LV.c)return;LV.c.forEach(c=>{if(c.a){const k=clamp((T-c.t0)/1.2,0,1);if(k>.9)numTag(c.a.x,c.a.y+3.05+c.a.lift,c.a.z+.1,c.v,{u:.85,min:50,wob:c.wob&&T-c.wob<.6?1:0,bg:c.fixed?'rgba(20,90,50,.85)':null})}else if(c.v==null&&GM.q)qTag(c.x,1.2,c.z,{u:1.1,min:60})})}});
 function boom3(x,y,z){SFX3.boom();cshake(.5);for(let k=0;k<24;k++)GM.fx.push({x,y,z,vx:rnd(-5,5),vy:rnd(0,6),vz:rnd(-3,3),g:9,life:.7,ml:.7,c:[CL.cy,CL.wht,CL.gold][k%3],s:.5});GM.fx.push({ring:1,x,z,life:.5,ml:.5,r:2.5,c:CL.ice})}
 function l3Upd(dt){if(!LV.c)return;LV.c.forEach(c=>{if(!c.a){if(c.v==null)ring(c.x,c.z,1,mul(CL.gold,.5+.4*Math.sin(T*6)),1,T);return}const a=c.a;const k=ease(clamp((T-c.t0)/1.2,0,1));
   if(c.drop){a.y=Math.max(0,a.y-dt*14);if(a.y===0){c.drop=0;SFX.thump();cshake(.3)}}else{a.x=lerp(-20,c.x,k);a.lift=Math.abs(Math.sin(T*6+c.i))*.12}a.z=c.z;a.flip=false;
@@ -86,7 +86,7 @@ function l3Upd(dt){if(!LV.c)return;LV.c.forEach(c=>{if(!c.a){if(c.v==null)ring(c
 const L4Q=[[10,8,6,4],[5,4,3,2],[20,15,10,5],[9,7,5,3],[18,16,14,12]];
 const _qx=new T3.Quaternion(),_qf=new T3.Quaternion().setFromAxisAngle(new T3.Vector3(1,0,0),Math.PI/2);
 lvlScene(4,{steps:5,win:'d_win',world:{tx:-8.6,tz:-7.2},bpm:138,
- setup(){LV.av=null;LV.sh=null;GM.put=actor('put_angry',4.3,{x:9.2,z:-8.6,y:1.15,breath:.012,flip:true});GM.extra=l4Upd},
+ setup(){LV.av=null;LV.sh=null;GM.put=actor('put_angry',5.2,{x:8.8,z:-9.2,breath:.012,flip:true});GM.extra=l4Upd},
  async run(){await say('d_in');await say('d_how');
   for(let s=0;s<5;s++){const Q=L4Q[s];
    LV.av={z:-18,tz:-7.4,b:Array.from({length:17},(_,i)=>({x:-7.5+i*.95+rnd(-.3,.3),dz:rnd(-1.6,.6),r:rnd(.9,1.45),rot:rnd(0,6)})),burst:0};SFX3.rumble();GM.put.key='put_laugh';setTimeout(()=>{if(GM.put)GM.put.key='put_angry'},1600);
@@ -109,9 +109,9 @@ function l4Upd(dt){// холм Путаника
  if(LV.sh)LV.sh.forEach(h=>{const k=ease(clamp((T-h.t0)/.5,0,1));if(k<=0)return;const fl=h.fl&&T-h.fl<.6?1-(T-h.fl)/.6:0;const c=h.on?mul([.45,.8,1],.7+fl):mul([1,.85,.4],.3+.25*Math.sin(T*6));
   instAdd(SHLD,h.x,h.y*k,h.z,1.25*k,1.25*k,1.25*k,_qf,c);lightPool(h.x,h.z+.4,1.8,mul(c,.35),1);if(!h.on)ring(h.x,h.z+.5,1,mul(CL.gold,.5),1,T)})}
 // ===== Уровень 5: таблица-крепость =====
-const TBL=[[1,2,3,4],[2,4,6,8],[5,10,15,20]];const TX5=[-4.8,-1.6,1.6,4.8],TZ5=[-6.7,-4.5,-2.3];
-lvlScene(5,{steps:6,win:'e_win',
- setup(){LV.hid={'0,2':1,'1,3':1,'2,1':1,'2,3':1};LV.rows=[0,0,0];LV.rowT=[0,0,0];GM.extra=l5Upd},
+const TBL=[[1,2,3,4],[2,4,6,8],[5,10,15,20]];const TX5=[-5.1,-1.7,1.7,5.1],TZ5=[-6.6,-3.6,-.6];
+lvlScene(5,{steps:6,win:'e_win',cam:[[0,11.5,9.6],[0,0,-3.6]],world:{tx:-9.6,tz:-9.5},
+ setup(){LV.hid={'0,2':1,'1,3':1,'2,1':1,'2,3':1};LV.rows=[0,0,0];LV.rowT=[0,0,0];GM.extra=l5Upd;if(GM.bur){GM.bur.x=8.2;GM.bur.z=1.4;GM.tgt={x:8.2,z:1.4}}},
  async run(){await say('e_in');await say('e_fill');
   const F=[[0,2,'e_ok1'],[1,3,'e_ok2'],[2,1,'e_ok3'],[2,3,'e_ok4']];
   for(let s=0;s<4;s++){const[r,c,k]=F[s];LV.cur=[r,c];wave(['thief','bot'].slice(0,1+(s>1?1:0)),1.2);GOAL='Какое число в пустой клетке?';
@@ -124,8 +124,8 @@ lvlScene(5,{steps:6,win:'e_win',
   wave(['bot','thief'],1.5);GOAL='Строка 2, столбец 3: какое число?';await say('e_cell');
   const cells=[];for(let r=0;r<3;r++)for(let c=0;c<4;c++)cells.push({id:r*4+c,box:()=>cellBox(r,c),c3:()=>[TX5[c],.6,TZ5[r]]});
   await ask({pick:cells,ans:6,target:()=>[TX5[2],.6,TZ5[1]],hint:'e_hint'});LV.cellFl=[1,2,T];GOAL='';stepDone();rowFire(1);rowFire(0);await say('e_ok6');await waveDone(.5)},
- draw(){for(let c=0;c<4;c++)numTag(TX5[c],.2,TZ5[0]-2,c+1,{u:.6,min:34,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'colh'});
-  for(let r=0;r<3;r++){numTag(TX5[0]-2.6,.2,TZ5[r],r+1,{u:.6,min:34,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'rowh'});
+ draw(){for(let c=0;c<4;c++)numTag(TX5[c],.2,TZ5[0]-2.5,c+1,{u:.7,min:44,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'colh'});
+  for(let r=0;r<3;r++){numTag(TX5[0]-2.6,.2,TZ5[r],r+1,{u:.7,min:44,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'rowh'});
    for(let c=0;c<4;c++){if(LV.hid[r+','+c]){if(LV.cur&&LV.cur[0]===r&&LV.cur[1]===c&&GM.q)qTag(TX5[c],.9,TZ5[r],{u:1,min:56});continue}
     const fl=LV.cellFl&&LV.cellFl[0]===r&&LV.cellFl[1]===c&&T-LV.cellFl[2]<1.2;numTag(TX5[c],.65,TZ5[r],TBL[r][c],{u:.82,min:48,bg:fl?'rgba(30,120,60,.9)':LV.rows[r]?'rgba(20,70,110,.85)':null})}}}});
 function rowBox(r){const a=proj(TX5[0]-1.4,.6,TZ5[r]),b=proj(TX5[3]+1.4,.6,TZ5[r]);const h=pxPerUnit(0,.6,TZ5[r])*1.6;return[a.x,a.y-h/2,b.x,b.y+h/2]}

@@ -7,7 +7,7 @@ const mul=(c,k)=>[c[0]*k,c[1]*k,c[2]*k];
 function onScene(n){actorsClear();TREE3.a=null;L3UPD=null;A3.off=false;A3.aur=0;A3.slowT=0;A3.frost=0;Object.assign(GM,{put:null,bur:null,en:[],bolts:[],fx:[],sb:[],hz:[],sky:[],spawnQ:[],calm:1,q:null,tray:[],fly:null,cone:null,moonUsed:false,said:{},towers:[],steer:null,frostT:0,streak:0,extra:null,lab:null,boss:null,pickHL:null,qT:0});PADS.count=0}
 // мир уровня: ёлка, Буран, камера
 function world(o){o=o||{};if(o.tree!==false)treeAdd(o.tx||0,o.tz==null?-9:o.tz,8.6);TREE3.lit=o.lit||0;
- if(o.bur!==false){GM.bur=actor('ride',3.3,{x:-3.2,z:3.8,breath:.008,run:0});GM.tgt={x:-3.2,z:3.8}}
+ if(o.bur!==false){GM.bur=actor('ride',3.3,{x:-5.6,z:3.2,breath:.008,run:0});GM.tgt={x:-5.6,z:3.2}}
  L3UPD=gameUpd;camTo(CAM_GAME[0],CAM_GAME[1]);if(o.snap!==false)camSnap()}
 // ---- точки сцены в координатах оверлея ----
 function talkerAt(who){if(who==='kira'&&GM.bur)return projA(GM.bur,.8).x;if(who==='putanik'&&GM.put)return projA(GM.put,.8).x;return null}
@@ -110,7 +110,7 @@ function flyUpd(rdt){const f=GM.fly;if(!f)return;f.t+=rdt;const q=GM.q;if(!q){GM
 function flyDraw(){const f=GM.fly,q=GM.q;if(!f||!q)return;const tp=q.target();const pt=proj(tp[0],tp[1],tp[2]);const p0=trayXY(f.i);let u=clamp(f.t/f.dur,0,1),x,y,s;
  if(!f.back){u=u*u*(3-2*u);x=lerp(f.x0,pt.x,u);y=lerp(f.y0,pt.y,u)-Math.sin(u*Math.PI)*120;s=lerp(1,.55,u)}else{u=ease(u);x=lerp(pt.x,p0.x,u);y=lerp(pt.y,p0.y,u)-Math.sin(u*Math.PI)*160;s=lerp(.55,1,u)}
  coreDraw(GM.tray[f.i].o,x,y,trayD()*s,f.back?(1-u)*6:f.t*14)}
-function answer(ok,i){const q=GM.q;const tp=q.target();
+function answer(ok,i){const q=GM.q;const tp=q.target();if(!ok)GM.mist=(GM.mist||0)+1;
  if(ok){q.done=true;GM.q=null;GM.tray=[];GM.calm=1;GM.qT=0;slowmo(1.05);punch(.55);vib(45);SFX.ok();SFX3.chime(GM.stepN);A3.flash=.35;
   for(let k=0;k<40;k++)GM.fx.push({x:tp[0],y:tp[1],z:tp[2],vx:rnd(-6,6),vy:rnd(-1,7),vz:rnd(-4,4),g:6,life:rnd(.5,1),ml:1,c:[CL.gold,CL.cy,CL.wht][k%3],s:rnd(.3,.7)});GM.fx.push({ring:1,x:tp[0],z:tp[2],life:.6,ml:.6,r:3.5,c:CL.gold});
   pose('shustrik','cheer',1.4);hop('shustrik');
@@ -118,8 +118,8 @@ function answer(ok,i){const q=GM.q;const tp=q.target();
   q.res(true)}
  else{q.tries++;GM.streak=0;GM.tray[i].dim=1;SFX3.sneeze();vib(20);pose('shustrik','think',3);oops('shustrik');for(let k=0;k<16;k++)GM.fx.push({x:tp[0],y:tp[1],z:tp[2],vx:rnd(-3,3),vy:rnd(0,4),vz:rnd(-2,2),g:6,life:.5,ml:.5,c:[.8,.85,1],s:.45});
   const ml=['miss1','miss2','miss3'][(q.tries-1)%3];sayNow(q.tries>=2&&q.hint?q.hint:ml);if(q.onMiss)q.onMiss(i)}}
-function pickAt(x,y){const q=GM.q;if(!q||!q.pick)return false;for(const it of q.pick){const b=it.box();if(x>b[0]&&x<b[2]&&y>b[1]&&y<b[3]){pickRes(it);return true}}return false}
-function pickRes(it){const q=GM.q;const c=it.c3?it.c3():[0,1,0];if(it.id===q.ans){q.target=()=>c;answer(true,0)}else{q.target=()=>c;q.tries++;GM.streak=0;SFX3.sneeze();vib(20);pose('shustrik','think',3);oops('shustrik');it.wob=T;sayNow(q.tries>=2&&q.hint?q.hint:['miss1','miss2','miss3'][(q.tries-1)%3]);if(q.onMiss)q.onMiss(it.id)}}
+function pickAt(x,y){const q=GM.q;if(!q||!q.pick)return false;let best=null,bd=1e9;for(const it of q.pick){const b=it.box();const pad=Math.max(0,30-(b[2]-b[0])/2);if(x>b[0]-pad&&x<b[2]+pad&&y>b[1]-pad&&y<b[3]+pad){const d=Math.hypot((x-(b[0]+b[2])/2)/(b[2]-b[0]+1),(y-(b[1]+b[3])/2)/(b[3]-b[1]+1));if(d<bd){bd=d;best=it}}}if(best){pickRes(best);return true}return false}
+function pickRes(it){const q=GM.q;const c=it.c3?it.c3():[0,1,0];if(it.id===q.ans){q.target=()=>c;answer(true,0)}else{GM.mist=(GM.mist||0)+1;q.target=()=>c;q.tries++;GM.streak=0;SFX3.sneeze();vib(20);pose('shustrik','think',3);oops('shustrik');it.wob=T;sayNow(q.tries>=2&&q.hint?q.hint:['miss1','miss2','miss3'][(q.tries-1)%3]);if(q.onMiss)q.onMiss(it.id)}}
 // ---- отрисовка оверлея: заряды, таблички с числами, гирлянда прогресса ----
 const ICON={r:'ball_r',g:'ball_g',b:'ball_b',s:'star',l:'bell'};
 function coreDraw(o,x,y,d,rot,a){X.save();X.translate(x,y);if(a!=null)X.globalAlpha=a;const g=X.createRadialGradient(0,0,d*.2,0,0,d*.62);g.addColorStop(0,'rgba(120,220,255,.55)');g.addColorStop(1,'rgba(120,220,255,0)');X.fillStyle=g;X.beginPath();X.arc(0,0,d*.62,0,7);X.fill();
@@ -148,7 +148,7 @@ const ARENA_IN={
  move(id,x,y){if(GM.drag&&GM.drag.id===id){GM.drag.x=x;GM.drag.y=y;if(Math.hypot(x-GM.drag.x0,y-GM.drag.y0)>18)GM.drag.moved=true}if(GM.steer&&GM.steer.id===id){GM.steer.x=x;GM.steer.y=y}},
  up(id){if(GM.drag&&GM.drag.id===id){const d=GM.drag;GM.drag=null;const p=trayXY(d.i);if(!d.moved||d.y<p.y-trayD()*.6){chooseOpt(d.i);if(d.moved&&GM.fly){GM.fly.x0=d.x;GM.fly.y0=d.y}}}if(GM.steer&&GM.steer.id===id)GM.steer=null}};
 // тестовый интерфейс
-G.q=()=>GM.q&&{opts:GM.q.opts,ans:GM.q.ans,pick:GM.q.pick&&GM.q.pick.map(p=>({id:p.id,b:p.box()}))};
+G.mist=()=>GM.mist||0;G.lv=()=>({done:!!LV.done});G.moon=()=>{const p=proj(MOON.position.x,MOON.position.y,MOON.position.z);return{p,pg:G.pg(p.x,p.y),used:!!GM.moonUsed}};G.q=()=>GM.q&&{tries:GM.q.tries,opts:GM.q.opts,ans:GM.q.ans,pick:GM.q.pick&&GM.q.pick.map(p=>({id:p.id,b:p.box()}))};
 G.trayPg=i=>{const p=trayXY(i);return G.pg(p.x,p.y)};G.killAll=()=>killAll();G.gm=()=>({en:GM.en.length,stepN:GM.stepN,steps:GM.steps,cones:SV.cones,bur:GM.bur&&{x:GM.bur.x,z:GM.bur.z},q:!!GM.q,fly:!!GM.fly});
 G.burTo=(x,z)=>{if(GM.bur){GM.bur.x=x;GM.bur.z=z;GM.tgt={x,z}}};G.coneAt=()=>GM.cone&&!GM.cone.got&&{x:GM.cone.x,z:GM.cone.z};
 G.actors=()=>ACT.filter(a=>a.m.visible).map(a=>{const im=IM[a.key];const ar=okI(im)?im.naturalWidth/im.naturalHeight:0;const s=a.m.scale;return{k:a.key,y:a.y+a.lift,ar,sar:Math.abs(s.x)/s.y,foot:proj(a.x,a.y+a.lift,a.z),top:proj(a.x,a.y+a.lift+s.y,a.z)}});
