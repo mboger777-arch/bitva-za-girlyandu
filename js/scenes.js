@@ -16,7 +16,7 @@ SC.intro={noHome:1,
    await wait(2200);SFX3.whoosh?SFX3.whoosh():SFX.whoosh();for(let i=12;i>=0;i--){setTimeout(()=>{TREE3.lit=i/12;SFX3.snap()},(12-i)*80)}LV.flee=T;await wait(1400);
    GM.put=actor('put_laugh',5.2,{x:6.5,z:-7,breath:.012});GM.put.flash=2;SFX3.boom();cshake(.8);await say('i3');
    camTo(CAM_GAME[0],CAM_GAME[1],1);cast=[hero('shustrik',RIGHT(130),{base:'think',h:260})];await say('i4');
-   GM.bur=actor('ride',2.7,{x:-3,z:3.2,breath:.008});GM.bur.flash=2;SFX3.power();await say('i5');pose('shustrik','cheer',2);await say('i6');
+   GM.bur=actor('ride',4.2,{x:-3,z:3.2,breath:.008});GM.bur.flash=2;SFX3.power();await say('i5');pose('shustrik','cheer',2);await say('i6');
    SV.intro=1;save();go('map')})},
  draw(){drawCast()},
  ui(){btn('skip','b_next',safeR()-60,safeB()-60,100,()=>{SV.intro=1;save();go('map')},{always:1})}};
@@ -42,10 +42,10 @@ function mapNode(id,x,y,d,t,open,fn,pulse){UI.push({id,x,y,w:d,h:d,fn});const k=
  txt(t,x,y+3,d*.62,open?'#fff6dc':'#9aa8bc',{f:NUM,st:'#0a1a4a',lw:8,box:[x-d*.42,y-d*.42,x+d*.42,y+d*.42],id:'zn'})}
 function plankLabel(t,x,y,w,h){slice3('plank',x,y,w,h,{cap:1.3});textIn(t,x,y+1,w-h*.7,h*.66,34,'#fff6dc',{f:FONT,st:'#0c2348',lw:5,id:'zname',min:20})}
 // ---- медаль ----
-SC.medal={
- enter(){world({lit:1,bur:false});TREE3.lit=1;GM.bur=null;GM.put=actor('put_kind',4.6,{x:4.5,z:-6.5,breath:.012});const b=actor('ride',2.8,{x:-4.4,z:-5.6,breath:.01});b.flip=true;orbit(14,6,.1,0,-8,4);camSnap();cast=[hero('shustrik',RIGHT(120),{base:'cheer',h:240})];musMenu();
+SC.medal={bubble:bw=>({x:safeR()-bw/2-14,top:safeT()+4}),
+ enter(){world({lit:1,bur:false});TREE3.lit=1;GM.bur=null;GM.put=actor('put_kind',5.6,{x:6.4,z:-6.8,breath:.012});const b=actor('ride',4.4,{x:-5.4,z:-5.4,breath:.01});b.flip=true;orbit(14,6,.1,0,-8,4);camSnap();cast=[hero('shustrik',RIGHT(120),{base:'cheer',h:240})];musMenu();
   LV={t0:T};run(async()=>{SFX.star();for(let i=0;i<6;i++)setTimeout(()=>firework(rnd(-7,7),rnd(6,10),rnd(-12,-5)),i*400);await say('f_medal');await say('f_end')});const ex=GM.extra;GM.extra=dt=>{ex(dt);if(Math.random()<.02)firework(rnd(-8,8),rnd(6,10),rnd(-12,-5))}},
- draw(){const k=ease(clamp((T-LV.t0)/.8,0,1));const v=vis();const h=Math.min(330,v.h*.48)*k;spr('medal',640,safeT()+40+h/2+Math.sin(T*2)*5,h,{rot:Math.sin(T*1.5)*.05});
+ draw(){const k=ease(clamp((T-LV.t0)/.8,0,1));const v=vis();const h=Math.min(330,v.h*.48)*k;LV.mx=lerp(LV.mx||640,talk&&talk.box?Math.min(640,talk.box[0]-h*.36-24):640,.08);spr('medal',LV.mx,safeT()+40+h/2+Math.sin(T*2)*5,h,{rot:Math.sin(T*1.5)*.05});
   textIn('Мастер закономерностей',640,safeT()+h+100,Math.min(820,v.w*.62),90,72,'#ffe9a8',{f:FONT,st:'#3a1d00',lw:10,id:'mtitle'});drawCast()},
  ui(){boardBtn('tomap',640,safeB()-70,320,'На карту',()=>go('map'),{pulse:1})}};
 // ---- бонус: Снежная битва ----

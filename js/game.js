@@ -7,7 +7,7 @@ const mul=(c,k)=>[c[0]*k,c[1]*k,c[2]*k];
 function onScene(n){actorsClear();TREE3.a=null;L3UPD=null;A3.off=false;A3.aur=0;A3.slowT=0;A3.frost=0;Object.assign(GM,{put:null,bur:null,en:[],bolts:[],fx:[],sb:[],hz:[],sky:[],spawnQ:[],calm:1,q:null,tray:[],fly:null,cone:null,moonUsed:false,said:{},towers:[],steer:null,frostT:0,streak:0,extra:null,lab:null,boss:null,pickHL:null,qT:0});PADS.count=0}
 // мир уровня: ёлка, Буран, камера
 function world(o){o=o||{};if(o.tree!==false)treeAdd(o.tx||0,o.tz==null?-9:o.tz,8.6);TREE3.lit=o.lit||0;
- if(o.bur!==false){GM.bur=actor('ride',3.3,{x:-5.6,z:3.2,breath:.008,run:0});GM.tgt={x:-5.6,z:3.2}}
+ if(o.bur!==false){GM.bur=actor('ride',4.7,{x:-4.6,z:3.4,breath:.008,run:0});GM.tgt={x:-4.6,z:3.4}}
  L3UPD=gameUpd;camTo(CAM_GAME[0],CAM_GAME[1]);if(o.snap!==false)camSnap()}
 // ---- точки сцены в координатах оверлея ----
 function talkerAt(who){if(who==='kira'&&GM.bur)return projA(GM.bur,.8).x;if(who==='putanik'&&GM.put)return projA(GM.put,.8).x;return null}

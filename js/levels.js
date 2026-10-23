@@ -109,9 +109,9 @@ function l4Upd(dt){// холм Путаника
  if(LV.sh)LV.sh.forEach(h=>{const k=ease(clamp((T-h.t0)/.5,0,1));if(k<=0)return;const fl=h.fl&&T-h.fl<.6?1-(T-h.fl)/.6:0;const c=h.on?mul([.45,.8,1],.7+fl):mul([1,.85,.4],.3+.25*Math.sin(T*6));
   instAdd(SHLD,h.x,h.y*k,h.z,1.25*k,1.25*k,1.25*k,_qf,c);lightPool(h.x,h.z+.4,1.8,mul(c,.35),1);if(!h.on)ring(h.x,h.z+.5,1,mul(CL.gold,.5),1,T)})}
 // ===== Уровень 5: таблица-крепость =====
-const TBL=[[1,2,3,4],[2,4,6,8],[5,10,15,20]];const TX5=[-5.1,-1.7,1.7,5.1],TZ5=[-6.6,-3.6,-.6];
-lvlScene(5,{steps:6,win:'e_win',cam:[[0,11.5,9.6],[0,0,-3.6]],world:{tx:-9.6,tz:-9.5},
- setup(){LV.hid={'0,2':1,'1,3':1,'2,1':1,'2,3':1};LV.rows=[0,0,0];LV.rowT=[0,0,0];GM.extra=l5Upd;if(GM.bur){GM.bur.x=8.2;GM.bur.z=1.4;GM.tgt={x:8.2,z:1.4}}},
+const TBL=[[1,2,3,4],[2,4,6,8],[5,10,15,20]];const TX5=[-4.6,-1.2,2.2,5.6],TZ5=[-6.4,-3.4,-.4];
+lvlScene(5,{steps:6,win:'e_win',cam:[[0,10.4,7.2],[0,0,-3.9]],world:{tx:-9.6,tz:-9.5},
+ setup(){LV.hid={'0,2':1,'1,3':1,'2,1':1,'2,3':1};LV.rows=[0,0,0];LV.rowT=[0,0,0];GM.extra=l5Upd;if(GM.bur){GM.bur.x=8.4;GM.bur.z=-1.2;GM.tgt={x:8.4,z:-1.2}}},
  async run(){await say('e_in');await say('e_fill');
   const F=[[0,2,'e_ok1'],[1,3,'e_ok2'],[2,1,'e_ok3'],[2,3,'e_ok4']];
   for(let s=0;s<4;s++){const[r,c,k]=F[s];LV.cur=[r,c];wave(['thief','bot'].slice(0,1+(s>1?1:0)),1.2);GOAL='Какое число в пустой клетке?';
@@ -124,14 +124,14 @@ lvlScene(5,{steps:6,win:'e_win',cam:[[0,11.5,9.6],[0,0,-3.6]],world:{tx:-9.6,tz:
   wave(['bot','thief'],1.5);GOAL='Строка 2, столбец 3: какое число?';await say('e_cell');
   const cells=[];for(let r=0;r<3;r++)for(let c=0;c<4;c++)cells.push({id:r*4+c,box:()=>cellBox(r,c),c3:()=>[TX5[c],.6,TZ5[r]]});
   await ask({pick:cells,ans:6,target:()=>[TX5[2],.6,TZ5[1]],hint:'e_hint'});LV.cellFl=[1,2,T];GOAL='';stepDone();rowFire(1);rowFire(0);await say('e_ok6');await waveDone(.5)},
- draw(){for(let c=0;c<4;c++)numTag(TX5[c],.2,TZ5[0]-2.9,c+1,{u:.7,min:44,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'colh'});
-  for(let r=0;r<3;r++){numTag(TX5[0]-2.6,.2,TZ5[r],r+1,{u:.7,min:44,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'rowh'});
-   for(let c=0;c<4;c++){if(LV.hid[r+','+c]){if(LV.cur&&LV.cur[0]===r&&LV.cur[1]===c&&GM.q)qTag(TX5[c],.9,TZ5[r],{u:1,min:56});continue}
-    const fl=LV.cellFl&&LV.cellFl[0]===r&&LV.cellFl[1]===c&&T-LV.cellFl[2]<1.2;numTag(TX5[c],.65,TZ5[r],TBL[r][c],{u:.82,min:48,bg:fl?'rgba(30,120,60,.9)':LV.rows[r]?'rgba(20,70,110,.85)':null})}}}});
+ draw(){for(let c=0;c<4;c++)numTag(TX5[c],.2,TZ5[0]-3.3,c+1,{u:.62,min:40,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'colh'});
+  for(let r=0;r<3;r++){numTag(TX5[0]-2.9,.2,TZ5[r],r+1,{u:.62,min:40,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'rowh'});
+   for(let c=0;c<4;c++){if(LV.hid[r+','+c]){if(LV.cur&&LV.cur[0]===r&&LV.cur[1]===c&&GM.q)qTag(TX5[c],.9,TZ5[r],{u:1.2,min:66});continue}
+    const fl=LV.cellFl&&LV.cellFl[0]===r&&LV.cellFl[1]===c&&T-LV.cellFl[2]<1.2;numTag(TX5[c],.65,TZ5[r],TBL[r][c],{u:1.05,min:58,bg:fl?'rgba(30,120,60,.9)':LV.rows[r]?'rgba(20,70,110,.85)':null})}}}});
 function rowBox(r){const a=proj(TX5[0]-1.4,.6,TZ5[r]),b=proj(TX5[3]+1.4,.6,TZ5[r]);const h=pxPerUnit(0,.6,TZ5[r])*1.6;return[a.x,a.y-h/2,b.x,b.y+h/2]}
-function cellBox(r,c){const p=proj(TX5[c],.6,TZ5[r]);const w=pxPerUnit(TX5[c],.6,TZ5[r])*2.6;return[p.x-w/2,p.y-w*.35,p.x+w/2,p.y+w*.35]}
+function cellBox(r,c){const p=proj(TX5[c],.6,TZ5[r]);const w=pxPerUnit(TX5[c],.6,TZ5[r])*3;return[p.x-w/2,p.y-w*.35,p.x+w/2,p.y+w*.35]}
 function rowFire(r){if(LV.rows[r])return;LV.rows[r]=1;LV.rowT[r]=T;SFX3.laser();SFX3.power();GM.sky.push({a:[-8,.8,TZ5[r]],b:[8,.8,TZ5[r]],life:.6,c:[1,.85,.4],w:.7,zig:0});GM.en.filter(e=>!e.dead&&Math.abs(e.z-TZ5[r])<2.2).forEach(e=>kill(e))}
-function l5Upd(dt){for(let r=0;r<3;r++)for(let c=0;c<4;c++){const x=TX5[c],z=TZ5[r];instAdd(PADS,x,.16,z,1.2,1,1.05);const on=LV.rows[r];
+function l5Upd(dt){for(let r=0;r<3;r++)for(let c=0;c<4;c++){const x=TX5[c],z=TZ5[r];instAdd(PADS,x,.16,z,1.45,1,1.25);const on=LV.rows[r];
   if(on){const k=ease(clamp((T-LV.rowT[r]-c*.12)/.5,0,1));instAdd(XTAL,x+1.05,.3+.5*k,z-.6,.3*k,.9*k,.3*k,null,[.6,1.1,1.4])}
   const hl=LV.rowHL&&LV.rowHL[0]===r&&T-LV.rowHL[1]<1.5;lightPool(x,z,1.5,hl?[.4,.35,.1]:on?[.08,.22,.35]:[.04,.08,.16],1);if(LV.hid[r+','+c]&&LV.cur&&LV.cur[0]===r&&LV.cur[1]===c)ring(x,z,1.05,mul(CL.gold,.6+.4*Math.sin(T*6)),1,T)}
  // готовые строки периодически стреляют вдоль себя

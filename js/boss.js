@@ -6,7 +6,7 @@ const BQ=[{p:1,g:[['s','r','s'],['r','s','r'],['s','r',null]],ans:'s',o:['s','r'
 const BPX=-1.2,BPZ=-5.2,bpPos=(r,c)=>[BPX+(c-1)*2.35,1.45+(2-r)*2.15,BPZ];
 const CAM_BOSS=[[0,8.2,16.5],[0,2.9,-4]];
 SC.boss={
- enter(){GM.lvl=6;GM.stepN=0;GM.steps=6;LV={hp:1,shown:1,panel:null,crack:0};world({tx:-9.2,tz:-8.4});GM.put=actor('put_angry',7,{x:6.3,z:-9.4,breath:.01,flip:false});
+ enter(){GM.lvl=6;GM.stepN=0;GM.steps=6;LV={hp:1,shown:1,panel:null,crack:0};world({tx:-9.2,tz:-8.4});GM.put=actor('put_angry',12,{x:6.8,z:-10.2,breath:.01,flip:false});
   cast=[hero('shustrik',LEFT(105),{base:'orb',h:215})];GM.extra=bossUpd;musStart('boss',148,1);CAMR.pos.set(0,4,24);CAMR.look.set(4,5,-9);camTo(CAM_BOSS[0],CAM_BOSS[1],1.1);
   run(async()=>{await wait(500);await say('f_in');await say('f_how');
    for(let i=0;i<6;i++){const Q=BQ[i];if(i%2===0){LV.panel=null;await say('f_p'+Q.p)}
@@ -33,7 +33,7 @@ async function bossAttack(i){GM.put.key='put_angry';wave(i<2?['drone','bot']:['d
  if(i>=3){for(let r=0;r<2;r++){hazard({kind:'stripe',x:GM.bur.x,z:0,len:14,w:2.2,rot:Math.PI/2});await wait(1500)}}await waveDone(.3)}
 async function shatter(){const P=LV.panel;LV.panel=null;LV.crack=0;SFX3.boom();SFX3.thunder();cshake(1.6);punch(.8);slowmo(1.3);A3.flash=.7;vib([60,40,80]);
  for(let r=0;r<3;r++)for(let c=0;c<3;c++){const p=bpPos(r,c);for(let k=0;k<14;k++)GM.fx.push({x:p[0],y:p[1],z:p[2],vx:rnd(-6,6),vy:rnd(-2,7),vz:rnd(0,7),g:9,life:rnd(.6,1.1),ml:1.1,c:[[.75,.5,1],CL.wht,CL.ice][k%3],s:rnd(.4,.8)})}
- const b=GM.bur;GM.sky.push({a:[b.x,2.3,b.z],b:[GM.put.x,4,GM.put.z],life:.6,c:CL.cy,w:.9,zig:.3});LV.hp=Math.max(0,LV.hp-1/3);LV.stun=T;GM.put.flash=2;GM.put.key='put_laugh';{const P=GM.put;setTimeout(()=>{if(GM.put===P&&P.key==='put_laugh')P.key='put_angry'},1600)};SFX.grumble();await wait(900)}
+ const b=GM.bur;GM.sky.push({a:[b.x,3.2,b.z],b:[GM.put.x,6,GM.put.z],life:.6,c:CL.cy,w:.9,zig:.3});LV.hp=Math.max(0,LV.hp-1/3);LV.stun=T;GM.put.flash=2;GM.put.key='put_laugh';{const P=GM.put;setTimeout(()=>{if(GM.put===P&&P.key==='put_laugh')P.key='put_angry'},1600)};SFX.grumble();await wait(900)}
 async function finale(){GM.q=null;killAll();LV.panel=null;musStart('menu');const P=GM.put;P.key='put_kind';P.tint=[1.3,1.1,.9];camTo([2,5.5,7],[5,3.5,-9],1.2);
  for(let i=0;i<30;i++)GM.fx.push({x:P.x+rnd(-2,2),y:rnd(0,7),z:P.z+.5,vx:rnd(-1,1),vy:rnd(1,3),vz:0,g:0,life:1.5,ml:1.5,c:[1,.8,.5],s:.6});
  await say('f_melt');P.tint=null;await say('f_kind');camTo([-2,6,13],[-6,4,-8],1);await say('f_yes');
