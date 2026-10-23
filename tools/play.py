@@ -135,7 +135,10 @@ async def run(b,W,H,F,R):
   while ok<3 and time.time()-t0<90:
     q=await pg.evaluate('G.q()');gm=await pg.evaluate('G.gm()')
     if q and not gm['fly'] and q['tries']==0:
-      p=await pg.evaluate(f'G.trayPg({q["ans"]})');await pg.touchscreen.tap(p['x'],p['y']);ok+=1;await pg.wait_for_timeout(600)
+      sn=gm['stepN'];p=await pg.evaluate(f'G.trayPg({q["ans"]})');await pg.touchscreen.tap(p['x'],p['y'])
+      for _ in range(60):
+        await pg.wait_for_timeout(100)
+        if (await pg.evaluate('G.gm()'))['stepN']!=sn:ok+=1;break
     else:
       if gm['en']>0:await pg.evaluate('G.killAll()')
       await pg.wait_for_timeout(150)
