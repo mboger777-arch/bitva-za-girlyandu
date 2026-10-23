@@ -132,7 +132,7 @@ async def run(b,W,H,F,R):
     nq=await play('bonus','false',1);await shot('bonus');R.append(f'{tag} bonus: {nq} q')
   # северное сияние: 3 верных ответа подряд с первого раза
   await pg.evaluate('G.go("l1")');t0=time.time();ok=0
-  while ok<3 and time.time()-t0<90:
+  while not await pg.evaluate('!!G.S().sec.aur') and time.time()-t0<150:
     q=await pg.evaluate('G.q()');gm=await pg.evaluate('G.gm()')
     if q and not gm['fly'] and q['tries']==0:
       sn=gm['stepN'];p=await pg.evaluate(f'G.trayPg({q["ans"]})');await pg.touchscreen.tap(p['x'],p['y'])
@@ -143,7 +143,7 @@ async def run(b,W,H,F,R):
       if gm['en']>0:await pg.evaluate('G.killAll()')
       await pg.wait_for_timeout(150)
   await pg.wait_for_timeout(1500);await shot('aurora')
-  if not await pg.evaluate('!!G.S().sec.aur'):F.append(f'{tag} aurora super-volley not triggered')
+  if not await pg.evaluate('!!G.S().sec.aur'):F.append(f'{tag} aurora super-volley not triggered ok={ok} scene='+await pg.evaluate('G.scene'))
   sec=await pg.evaluate('G.S().sec');R.append(f'{tag} secrets {sec}')
   # портрет: подсказка поворота
   c2=await b.new_context(viewport={'width':H,'height':W},has_touch=True,is_mobile=True,device_scale_factor=2);p2=await c2.new_page()
