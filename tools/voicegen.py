@@ -51,8 +51,8 @@ if jobs:
         w=o['who']
         if w not in P: P[w]=M.create_voice_clone_prompt(ref_audio=REF[w][0],ref_text=REF[w][1],x_vector_only_mode=False)
         t=spoken(o);best=None
-        for take in range(4):
-            torch.manual_seed(2000+i*7+take)
+        for take in range(int(os.environ.get('TAKES','4'))):
+            torch.manual_seed(int(os.environ.get('SEED','2000'))+i*7+take)
             wv,sr=M.generate_voice_clone(text=t,language='Russian',voice_clone_prompt=P[w],non_streaming_mode=True,temperature=0.6 if take==0 else 0.5,max_new_tokens=max(80,int(len(t)*1.8)+40))
             raw=f'/tmp/kv_{take}.wav';sf.write(raw,wv[0],sr);fin=f'/tmp/kv_{take}.mp3'
             subprocess.run(['ffmpeg','-y','-loglevel','error','-i',raw,'-af',CHAIN,'-ac','1','-ar','24000','-b:a','64k',fin],check=True)

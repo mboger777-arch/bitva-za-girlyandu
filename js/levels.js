@@ -52,7 +52,7 @@ lvlScene(2,{steps:6,win:'b_win',
   for(let s=0;s<6;s++){const Q=L2Q[s];LV.f.forEach(d=>actorKill(d.a));LV.f=Q.map((v,i)=>({v,i,x:(i-1.5)*3.7,z:-4.6,y:2.4,a:actor('drone',2.9,{x:(i-1.5)*3.7,z:-17,y:5,breath:.01}),show:i<3,dead:0,t0:T+i*.12}));LV.shield=1;
    wave(['bot'],1);await wait(1400);while(LV.f&&LV.f[3]&&T-LV.f[3].t0<1.35)await new Promise(r=>setTimeout(r,50));GOAL=GOALS[2];await say('b_q'+(s+1));
    const d=Q[3]-Q[2];const opts=numOpts(Q[3],d).map(v=>({v}));
-   await ask({opts,ans:opts.findIndex(o=>o.v===Q[3]),target:()=>{const f=LV.f[3];return[f.x,f.y+.8,f.z]},hint:'b_hint'});
+   await ask({opts,ans:opts.findIndex(o=>o.v===Q[3]),target:()=>{const f=LV.f&&LV.f[3];return f?[f.x,f.y+.8,f.z]:[0,2,-5]},hint:'b_hint'});
    LV.f[3].show=1;LV.shield=0;GOAL='';stepDone();SFX3.thunder();
    // цепная молния: Буран → дрон 1 → 2 → 3 → 4
    const b=GM.bur;let prev=[b.x,2.3,b.z];for(let i=0;i<4;i++){const f=LV.f[i];const cur=[f.x,f.y+.8,f.z];const pv=prev;setTimeout(()=>{GM.sky.push({a:pv,b:cur,life:.5,c:[.6,.85,1],w:.4,zig:.45,seed:i*5});f.dead=1;f.a.flash=2;SFX3.boom();cshake(.6);for(let k=0;k<26;k++)GM.fx.push({x:f.x,y:f.y+.8,z:f.z,vx:rnd(-5,5),vy:rnd(-1,6),vz:rnd(-3,3),g:8,life:.8,ml:.8,c:[CL.cy,CL.wht,CL.gold][k%3],s:.5})},150+i*170);prev=cur}
@@ -91,7 +91,7 @@ lvlScene(4,{steps:5,win:'d_win',world:{tx:-8.6,tz:-7.2},bpm:138,
   for(let s=0;s<5;s++){const Q=L4Q[s];
    LV.av={z:-18,tz:-7.4,b:Array.from({length:17},(_,i)=>({x:-7.5+i*.95+rnd(-.3,.3),dz:rnd(-1.6,.6),r:rnd(.9,1.45),rot:rnd(0,6)})),burst:0};SFX3.rumble();GM.put.key='put_laugh';setTimeout(()=>{if(GM.put)GM.put.key='put_angry'},1600);
    LV.sh=Q.map((v,i)=>({v,i,x:(i-1.5)*3.1,z:-4.3,y:1.6,on:i<3,t0:T+.8+i*.15}));
-   await wait(1800);GOAL=GOALS[4];const d=Q[2]-Q[3];const opts=numOpts(Q[3],d).map(v=>({v}));
+   await wait(1800);while(LV.sh&&T-LV.sh[3].t0<.7)await new Promise(r=>setTimeout(r,50));GOAL=GOALS[4];const d=Q[2]-Q[3];const opts=numOpts(Q[3],d).map(v=>({v}));
    await ask({opts,ans:opts.findIndex(o=>o.v===Q[3]),target:()=>[LV.sh[3].x,1.6,LV.sh[3].z],hint:'d_hint'});
    LV.sh[3].on=1;LV.sh.forEach(h=>h.fl=T);GOAL='';stepDone();SFX3.shield();
    // щиты бьют лучами в лавину — шары рассыпаются
