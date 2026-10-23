@@ -50,7 +50,7 @@ lvlScene(2,{steps:6,win:'b_win',
  setup(){LV.f=[];GM.extra=l2Upd},
  async run(){await say('b_in');
   for(let s=0;s<6;s++){const Q=L2Q[s];LV.f.forEach(d=>actorKill(d.a));LV.f=Q.map((v,i)=>({v,i,x:(i-1.5)*3.7,z:-4.6,y:2.4,a:actor('drone',2.9,{x:(i-1.5)*3.7,z:-17,y:5,breath:.01}),show:i<3,dead:0,t0:T+i*.12}));LV.shield=1;
-   wave(['bot'],1);await wait(1400);while(LV.f&&LV.f[3]&&T-LV.f[3].t0<1.35)await new Promise(r=>setTimeout(r,50));GOAL=GOALS[2];await say('b_q'+(s+1));
+   wave(['bot'],1);await wait(1400);while(LV.f&&LV.f[3]&&T-LV.f[3].t0<1.35)await wait(50);GOAL=GOALS[2];await say('b_q'+(s+1));
    const d=Q[3]-Q[2];const opts=numOpts(Q[3],d).map(v=>({v}));
    await ask({opts,ans:opts.findIndex(o=>o.v===Q[3]),target:()=>{const f=LV.f&&LV.f[3];return f?[f.x,f.y+.8,f.z]:[0,2,-5]},hint:'b_hint'});
    LV.f[3].show=1;LV.shield=0;GOAL='';stepDone();SFX3.thunder();
@@ -66,7 +66,7 @@ lvlScene(3,{steps:6,win:'c_win',
  setup(){LV.c=[];GM.extra=l3Upd},
  async run(){await say('c_in');
   for(let s=0;s<6;s++){const Q=L3Q[s];LV.c.forEach(c=>c.a&&actorKill(c.a));LV.c=Q.v.map((v,i)=>({v,i,x:(i-2)*2.9,z:-3.9,a:v==null?null:actor('bot',2.6,{x:-20,z:-3.9,breath:.012}),t0:T+i*.15,wob:0}));
-   wave(['thief'],1);await wait(1600);while(T-LV.c[LV.c.length-1].t0<1.3)await new Promise(r=>setTimeout(r,50));GOAL=Q.k==='imp'?'Нажми на робота-самозванца!':'Какое число пропало?';
+   wave(['thief'],1);await wait(1600);while(T-LV.c[LV.c.length-1].t0<1.3)await wait(50);GOAL=Q.k==='imp'?'Нажми на робота-самозванца!':'Какое число пропало?';
    await say(Q.k==='imp'?'c_imp':'c_gap');
    if(Q.k==='imp'){await ask({pick:LV.c.map(c=>({id:c.i,box:()=>{const a=c.a,f=projA(a,0),t=projA(a,1.3);const w=(f.y-t.y)*.62;return[f.x-w/2,t.y,f.x+w/2,f.y]},c3:()=>[c.a.x,1.2,c.a.z],get wob(){return 0},set wob(v){c.wob=v}})),ans:Q.a,target:()=>[0,1,-4],hint:'c_hint'});
     const c=LV.c[Q.a];const b=GM.bur;GM.sky.push({a:[b.x,2.3,b.z],b:[c.a.x,1.2,c.a.z],life:.4,c:CL.cy,w:.45,zig:0});SFX3.laser();boom3(c.a.x,1.2,c.a.z);actorKill(c.a);c.a=actor('bot',2.6,{x:c.x,z:c.z,y:7,breath:.012});c.drop=1;c.v=Q.fix;c.fixed=1}
@@ -89,9 +89,9 @@ lvlScene(4,{steps:5,win:'d_win',world:{tx:-8.6,tz:-7.2},bpm:138,
  setup(){LV.av=null;LV.sh=null;GM.put=actor('put_angry',5.2,{x:8.8,z:-9.2,breath:.012,flip:true});GM.extra=l4Upd},
  async run(){await say('d_in');await say('d_how');
   for(let s=0;s<5;s++){const Q=L4Q[s];
-   LV.av={z:-18,tz:-7.4,b:Array.from({length:17},(_,i)=>({x:-7.5+i*.95+rnd(-.3,.3),dz:rnd(-1.6,.6),r:rnd(.9,1.45),rot:rnd(0,6)})),burst:0};SFX3.rumble();GM.put.key='put_laugh';setTimeout(()=>{if(GM.put)GM.put.key='put_angry'},1600);
+   LV.av={z:-18,tz:-7.4,b:Array.from({length:17},(_,i)=>({x:-7.5+i*.95+rnd(-.3,.3),dz:rnd(-1.6,.6),r:rnd(.9,1.45),rot:rnd(0,6)})),burst:0};SFX3.rumble();GM.put.key='put_laugh';{const P=GM.put;setTimeout(()=>{if(GM.put===P&&P.key==='put_laugh')P.key='put_angry'},1600)};
    LV.sh=Q.map((v,i)=>({v,i,x:(i-1.5)*3.1,z:-4.3,y:1.6,on:i<3,t0:T+.8+i*.15}));
-   await wait(1800);while(LV.sh&&T-LV.sh[3].t0<.7)await new Promise(r=>setTimeout(r,50));GOAL=GOALS[4];const d=Q[2]-Q[3];const opts=numOpts(Q[3],d).map(v=>({v}));
+   await wait(1800);while(LV.sh&&T-LV.sh[3].t0<.7)await wait(50);GOAL=GOALS[4];const d=Q[2]-Q[3];const opts=numOpts(Q[3],d).map(v=>({v}));
    await ask({opts,ans:opts.findIndex(o=>o.v===Q[3]),target:()=>[LV.sh[3].x,1.6,LV.sh[3].z],hint:'d_hint'});
    LV.sh[3].on=1;LV.sh.forEach(h=>h.fl=T);GOAL='';stepDone();SFX3.shield();
    // щиты бьют лучами в лавину — шары рассыпаются

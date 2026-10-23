@@ -52,7 +52,10 @@ async def run(b,W,H,F,R):
     f=await pg.evaluate('G.fps()');r=await pg.evaluate('typeof G.r3=="function"?G.r3():G.r3');R.append(f'{tag} {where} fps={f} r3={r}')
   # титул → интро → карта
   await pg.wait_for_timeout(1200);await audit('title');await shot('title')
-  await tapbtn('play');await pg.wait_for_function('G.scene==="intro"',timeout=8000)
+  for _ in range(3):
+    await tapbtn('play')
+    try:await pg.wait_for_function('G.scene==="intro"||G.scene==="map"',timeout=8000);break
+    except Exception:pass
   await pg.wait_for_timeout(1500);await audit('intro');await shot('intro')
   if await pg.evaluate('G.scene')=='intro':await tapbtn('skip',4)
   await pg.wait_for_function('G.scene==="map"',timeout=8000);await pg.wait_for_timeout(800);await audit('map');await shot('map')
