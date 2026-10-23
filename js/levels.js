@@ -124,8 +124,8 @@ lvlScene(5,{steps:6,win:'e_win',cam:[[0,10.4,7.2],[0,0,-3.9]],world:{tx:-9.6,tz:
   wave(['bot','thief'],1.5);GOAL='Строка 2, столбец 3: какое число?';await say('e_cell');
   const cells=[];for(let r=0;r<3;r++)for(let c=0;c<4;c++)cells.push({id:r*4+c,box:()=>cellBox(r,c),c3:()=>[TX5[c],.6,TZ5[r]]});
   await ask({pick:cells,ans:6,target:()=>[TX5[2],.6,TZ5[1]],hint:'e_hint'});LV.cellFl=[1,2,T];GOAL='';stepDone();rowFire(1);rowFire(0);await say('e_ok6');await waveDone(.5)},
- draw(){for(let c=0;c<4;c++)numTag(TX5[c],.2,TZ5[0]-3.3,c+1,{u:.62,min:40,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'colh'});
-  for(let r=0;r<3;r++){numTag(TX5[0]-2.9,.2,TZ5[r],r+1,{u:.62,min:40,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'rowh'});
+ draw(){for(let c=0;c<4;c++)numTag(TX5[c],.2,TZ5[0]-4.6,c+1,{u:.8,min:54,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'colh'});
+  for(let r=0;r<3;r++){numTag(TX5[0]-2.9,.2,TZ5[r],r+1,{u:.8,min:54,bg:'rgba(70,40,0,.8)',rim:'#ffd36a',col:'#ffe9a8',id:'rowh'});
    for(let c=0;c<4;c++){if(LV.hid[r+','+c]){if(LV.cur&&LV.cur[0]===r&&LV.cur[1]===c&&GM.q)qTag(TX5[c],.9,TZ5[r],{u:1.2,min:66});continue}
     const fl=LV.cellFl&&LV.cellFl[0]===r&&LV.cellFl[1]===c&&T-LV.cellFl[2]<1.2;numTag(TX5[c],.65,TZ5[r],TBL[r][c],{u:1.05,min:58,bg:fl?'rgba(30,120,60,.9)':LV.rows[r]?'rgba(20,70,110,.85)':null})}}}});
 function rowBox(r){const a=proj(TX5[0]-1.4,.6,TZ5[r]),b=proj(TX5[3]+1.4,.6,TZ5[r]);const h=pxPerUnit(0,.6,TZ5[r])*1.6;return[a.x,a.y-h/2,b.x,b.y+h/2]}
