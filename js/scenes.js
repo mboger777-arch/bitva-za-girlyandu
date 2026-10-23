@@ -43,7 +43,7 @@ function mapNode(id,x,y,d,t,open,fn,pulse){UI.push({id,x,y,w:d,h:d,fn});const k=
 function plankLabel(t,x,y,w,h){slice3('plank',x,y,w,h,{cap:1.3});textIn(t,x,y+1,w-h*.7,h*.66,34,'#fff6dc',{f:FONT,st:'#0c2348',lw:5,id:'zname',min:20})}
 // ---- медаль ----
 SC.medal={bubble:bw=>({x:safeR()-bw/2-14,top:safeT()+4}),
- enter(){world({lit:1,bur:false});TREE3.lit=1;GM.bur=null;GM.put=actor('put_kind',5.6,{x:6.4,z:-6.8,breath:.012});const b=actor('ride',4.4,{x:-5.4,z:-5.4,breath:.01});b.flip=true;orbit(14,6,.1,0,-8,4);camSnap();cast=[hero('shustrik',RIGHT(120),{base:'cheer',h:240})];musMenu();
+ enter(){world({lit:1,bur:false});TREE3.lit=1;GM.bur=null;GM.put=actor('put_kind',5.6,{x:6.4,z:-6.8,breath:.012});const b=actor('ride',4.4,{x:-4.3,z:-5.4,breath:.01});b.flip=true;orbit(14,6,.1,0,-8,4);camSnap();cast=[hero('shustrik',RIGHT(120),{base:'cheer',h:240})];musMenu();
   LV={t0:T};run(async()=>{SFX.star();for(let i=0;i<6;i++)setTimeout(()=>firework(rnd(-7,7),rnd(6,10),rnd(-12,-5)),i*400);await say('f_medal');await say('f_end')});const ex=GM.extra;GM.extra=dt=>{ex(dt);if(Math.random()<.02)firework(rnd(-8,8),rnd(6,10),rnd(-12,-5))}},
  draw(){const k=ease(clamp((T-LV.t0)/.8,0,1));const v=vis();const h=Math.min(330,v.h*.48)*k;LV.mx=lerp(LV.mx||640,talk&&talk.box?Math.min(640,talk.box[0]-h*.36-24):640,.08);spr('medal',LV.mx,safeT()+40+h/2+Math.sin(T*2)*5,h,{rot:Math.sin(T*1.5)*.05});
   textIn('Мастер закономерностей',640,safeT()+h+100,Math.min(820,v.w*.62),90,72,'#ffe9a8',{f:FONT,st:'#3a1d00',lw:10,id:'mtitle'});drawCast()},
