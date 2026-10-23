@@ -19,7 +19,7 @@ function burUpd(dt,rdt){const b=GM.bur;if(!b)return;
  GM.tgt.x=clamp(GM.tgt.x,BND.x0,BND.x1);GM.tgt.z=clamp(GM.tgt.z,BND.z0,BND.z1);
  GM.frostT=Math.max(0,GM.frostT-rdt);const sp=GM.frostT>0?2.2:9.5;const dx=GM.tgt.x-b.x,dz=GM.tgt.z-b.z,d=Math.hypot(dx,dz);let v=0;
  if(d>.06){const s=Math.min(d,sp*rdt);b.x+=dx/d*s;b.z+=dz/d*s;v=s/Math.max(rdt,1e-4);if(Math.abs(dx)>.25)b.flip=(dx<0)===(FACE>0)}
- b.run=lerp(b.run,clamp(v/8,0,1),.15);b.lift=Math.abs(Math.sin(T*13))*.22*b.run;b.tilt=(b.flip?1:-1)*b.run*.05+Math.sin(T*13)*.02*b.run;
+ b.run=lerp(b.run,clamp(v/8,0,1),.15);b.lift=Math.abs(Math.sin(T*13))*.09*b.run;b.tilt=(b.flip?1:-1)*b.run*.05+Math.sin(T*13)*.02*b.run;
  if(b.run>.3&&Math.random()<.5)GM.fx.push({x:b.x+rnd(-.5,.5),y:.1,z:b.z+rnd(-.2,.3),vx:rnd(-.5,.5),vy:rnd(.5,1.4),vz:rnd(-.2,.4),g:3,life:.5,ml:.5,c:[.5,.6,.75],s:.5});
  b.tint=GM.frostT>0?[.55,.8,1.3]:null;if(GM.frostT>0&&Math.random()<.4)glow(b.x+rnd(-.8,.8),rnd(.3,2.4),b.z+.3,CL.ice,.35);
  // кольцо под Бураном — видно, где он

@@ -10,6 +10,7 @@ SC.boss={
   cast=[hero('shustrik',LEFT(105),{base:'orb',h:215})];GM.extra=bossUpd;musStart('boss',148,1);CAMR.pos.set(0,4,24);CAMR.look.set(4,5,-9);camTo(CAM_BOSS[0],CAM_BOSS[1],1.1);
   run(async()=>{await wait(500);await say('f_in');await say('f_how');
    for(let i=0;i<6;i++){const Q=BQ[i];if(i%2===0){LV.panel=null;await say('f_p'+Q.p)}
+    if(GM.bur)GM.tgt={x:-4.6,z:3.4};
     LV.panel={g:Q.g,t0:T,miss:Q.g.flatMap((row,r)=>row.map((v,c)=>v==null?[r,c]:null)).find(Boolean)};GOAL='Что пропало на щите?';
     const opts=shuffle(Q.o.slice()).map(v=>typeof v==='string'?{icon:v}:{v});const mr=LV.panel.miss;
     await ask({opts,ans:opts.findIndex(o=>(o.icon||o.v)===Q.ans),target:()=>bpPos(mr[0],mr[1]),hint:'f_hint'});
